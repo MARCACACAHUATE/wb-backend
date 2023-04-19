@@ -15,5 +15,12 @@ namespace wb_backend.Models {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseNpgsql(_config["ConnectionString"]);
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder){
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Cursos)
+                .WithMany(e => e.Users)
+                .UsingEntity("Inscripciones_cursos");
+        }
     }
 }

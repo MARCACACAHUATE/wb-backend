@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using wb_backend.Models;
 
 namespace wb_backend.Models {
     public class Evento {

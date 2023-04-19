@@ -20,6 +20,8 @@ namespace wb_backend.Models {
         public string Email { get; set; } = "";
         public bool Is_admin { get; set; } = false;
         public bool Is_staff { get; set; } = false;
-
+        public virtual ICollection<Curso> Cursos { get; set; }
+        public virtual ICollection<ReservacionCurso> ReservacionCursos { get; set; } = new List<ReservacionCurso>();
+        public virtual ICollection<ReservacionEvento> ReservacionEventos { get; set; } = new List<ReservacionEvento>();
     }
 }
