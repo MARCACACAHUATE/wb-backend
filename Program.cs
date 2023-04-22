@@ -1,3 +1,4 @@
+using wb_backend.Models;
 using wb_backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,8 @@ builder.Services.AddEndpointsApiExplorer();
 
 // Inject custom services
 builder.Services.AddTransient<IServiceExample, ServiceExample>();
+builder.Services.AddTransient<IEventoServices, EventoServices>();
+builder.Services.AddDbContext<WujuDbContext>();
 
 
 var app = builder.Build();
