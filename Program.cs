@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using wb_backend.Models;
 using wb_backend.Services;
 
@@ -10,10 +11,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 
+//string connection = builder.Configuration["ConnectionString"]; 
+DotNetEnv.Env.Load();
+
 // Inject custom services
 builder.Services.AddTransient<IServiceExample, ServiceExample>();
 builder.Services.AddTransient<IEventoServices, EventoServices>();
-builder.Services.AddDbContext<WujuDbContext>();
+builder.Services.AddDbContext<WujuDbContext>(options =>{
+    string connection = builder.Configuration["ConnectionString"]; 
+    string pg_connection = connection != null ? connection : Environment.GetEnvironmentVariable("PGCONNECTION");
+    options.UseNpgsql(pg_connection);
+    //options.UseNpgsql(builder.Configuration.GetConnectionString("WujuDB"))
+});
 
 
 var app = builder.Build();
@@ -25,6 +34,7 @@ if (app.Environment.IsDevelopment())
     //app.UseSwaggerUI();
     builder.Configuration.AddUserSecrets<Program>();
 }
+
 
 app.UseHttpsRedirection();
 
