@@ -9,12 +9,15 @@ namespace wb_backend.Models {
         public DbSet<Curso> Cursos { get; set; }
         private readonly IConfiguration _config;
 
-        public WujuDbContext(IConfiguration config){
+        public WujuDbContext(
+            DbContextOptions<WujuDbContext> options,
+            IConfiguration config
+            ) : base(options){
             _config = config;
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseNpgsql(_config["ConnectionString"]);
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //    => optionsBuilder.UseNpgsql(_config["ConnectionString"]);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder){
             modelBuilder.Entity<User>()
