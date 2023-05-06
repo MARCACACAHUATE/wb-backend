@@ -11,17 +11,21 @@ namespace wb_backend.Models {
         public string? First_name { get; set; }
         public string? Last_name { get; set; }
         [Required]
+        public string Email { get; set; } = "";
+        [Required]
         public string Password { get; set; } = "";
         [Required]
-        public string Nickname { get; set; } = "";
         public int Telefono { get; set; }
-        public string? Direccion { get; set; }
-        [Required]
-        public string Email { get; set; } = "";
-        public bool Is_admin { get; set; } = false;
-        public bool Is_staff { get; set; } = false;
-        public virtual ICollection<Curso> Cursos { get; set; }
-        public virtual ICollection<ReservacionCurso> ReservacionCursos { get; set; } = new List<ReservacionCurso>();
-        public virtual ICollection<ReservacionEvento> ReservacionEventos { get; set; } = new List<ReservacionEvento>();
+        public string? Calle { get; set; }
+        public string? Numero { get; set; }
+        public string? Municipio { get; set; }
+        public int Id_EstadoCurso { get; set; }
+        [ForeignKey("Id_EstadoCurso")]
+        public EstadoCurso EstadoCurso { get; set; } = null!;
+        public int Id_TipoUser {get; set; }
+        [ForeignKey("Id_TipoUser")]
+        public TipoUser TipoUser { get; set; } = null!;
+        public virtual ICollection<Curso> Cursos { get; set; } = new List<Curso>();
+        public virtual ICollection<Evento> Eventos { get; set; } = new List<Evento>();
     }
 }
