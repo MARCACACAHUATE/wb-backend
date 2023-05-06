@@ -18,12 +18,10 @@ namespace wb_backend.Controllers
 
         private readonly IServiceExample _serviceExample;
         private readonly IEventoServices _eventoService;
-        private readonly IConfiguration _config;
 
         public EventosController(
             IServiceExample serviceExample,
-            IEventoServices eventoServices,
-            IConfiguration config
+            IEventoServices eventoServices
             )
         {
             _serviceExample = serviceExample;
@@ -115,6 +113,18 @@ namespace wb_backend.Controllers
                 response.Message = $"Elemento con id {id} no existe";
                 response.Estado = 0;
             }
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("available")]
+        public IActionResult AvailableDates(){
+            Response response = new Response();
+
+            response.Estado = 1;
+            response.Message = "Operacion realizada con exito";            
+            response.data = _eventoService.GetEventoDate(HttpContext.Request.Query);
+
             return Ok(response);
         }
     }
