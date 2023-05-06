@@ -7,6 +7,8 @@ namespace wb_backend.Models {
         public DbSet<User> Users { get; set; }
         public DbSet<Evento> Eventos { get; set; }
         public DbSet<Curso> Cursos { get; set; }
+        public DbSet<TipoUser> TipoUsers { get; set; }
+        public DbSet<EstadoCurso> EstadoCursos { get; set; }
         private readonly IConfiguration _config;
 
         public WujuDbContext(
@@ -23,7 +25,12 @@ namespace wb_backend.Models {
             modelBuilder.Entity<User>()
                 .HasMany(e => e.Cursos)
                 .WithMany(e => e.Users)
-                .UsingEntity("Inscripciones_cursos");
+                .UsingEntity("UserHasCursos");
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Eventos)
+                .WithMany(e => e.Users)
+                .UsingEntity("UserHasEventos");
         }
     }
 }
