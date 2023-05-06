@@ -24,6 +24,6 @@ namespace wb_backend.Models {
         public float Costo_reservacion { get; set; }
         [Required]
         public float Costo_total { get; set; }
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<User> Users { get; set; } = new List<User>();
     }
 }
