@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using wb_backend.Models;
@@ -11,9 +12,11 @@ using wb_backend.Models;
 namespace wbbackend.Migrations
 {
     [DbContext(typeof(WujuDbContext))]
-    partial class WujuDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230507223703_Migrando_modelos_eventos_pd1")]
+    partial class Migrandomodeloseventospd1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,6 +140,9 @@ namespace wbbackend.Migrations
                     b.Property<string>("Mobiliario")
                         .HasColumnType("text");
 
+                    b.Property<int?>("MunicipioId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("NombrePaquete")
                         .HasColumnType("text");
 
@@ -148,7 +154,7 @@ namespace wbbackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id_Municipio");
+                    b.HasIndex("MunicipioId");
 
                     b.ToTable("Eventos");
                 });
@@ -326,13 +332,9 @@ namespace wbbackend.Migrations
 
             modelBuilder.Entity("wb_backend.Models.Evento", b =>
                 {
-                    b.HasOne("wb_backend.Models.Municipio", "Municipio")
+                    b.HasOne("wb_backend.Models.Municipio", null)
                         .WithMany("Eventos")
-                        .HasForeignKey("Id_Municipio")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Municipio");
+                        .HasForeignKey("MunicipioId");
                 });
 
             modelBuilder.Entity("wb_backend.Models.EventoSeparacion", b =>
