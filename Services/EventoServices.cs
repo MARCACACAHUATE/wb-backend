@@ -35,12 +35,15 @@ namespace wb_backend.Services {
             CultureInfo cult = new CultureInfo("es-MX", false);
             DateTime fecha = DateTime.ParseExact(evento_data.Fecha, _dateFormat, cult);
             Evento evento_nuevo = new Evento{
-                Nombre = evento_data.Nombre,
-                Tematica = evento_data.Tematica,
-                Direccion = evento_data.Direccion,
-                Fecha = fecha.ToUniversalTime(),
+                NombrePaquete = evento_data.Nombre,
+                Ocasion = evento_data.Tematica,
+                Servicios = "",
+                Mobiliario = "",
+                ColorGlobos = "",
+                CostoEnvioMaterial = 2.2f,
+                Estado = "",
                 Costo_reservacion = evento_data.Costo_reservacion,
-                Costo_total = evento_data.Costo_total
+                Costo_total = evento_data.Costo_total,
             };
 
             _dbContext.Eventos.Add(evento_nuevo);
@@ -69,10 +72,8 @@ namespace wb_backend.Services {
             DateTime fecha = DateTime.ParseExact(data_evento.Fecha, "dd-MM-yyyy", null);
 
             Evento evento = GetEvento(id_evento);
-            evento.Nombre = data_evento.Nombre; 
-            evento.Tematica = data_evento.Tematica;
-            evento.Direccion = data_evento.Direccion;
-            evento.Fecha = fecha.ToUniversalTime();
+            evento.NombrePaquete = data_evento.Nombre; 
+            evento.Ocasion = data_evento.Tematica;
             evento.Costo_total = data_evento.Costo_total;
             evento.Costo_reservacion = data_evento.Costo_reservacion;
 
@@ -133,22 +134,22 @@ namespace wb_backend.Services {
             var fecha_final = DateTime.ParseExact(rango_final, _dateFormat, null);
 
             eventos_list = (from evento in _dbContext.Eventos.ToList()
-                            where evento.Fecha >= fecha_inicial &&
-                                  evento.Fecha <= fecha_final
+            //                where evento.Fecha >= fecha_inicial &&
+            //                      evento.Fecha <= fecha_final
                             select evento).ToList();
 
-            var eventosGroup = (from item in eventos_list
-                                orderby item.Fecha ascending
-                                group item by item.Fecha).ToList();
+            //var eventosGroup = (from item in eventos_list
+             //                   orderby item.Fecha ascending
+              //                  group item by item.Fecha).ToList();
 
-            foreach(var fecha in eventosGroup){
-                EventoDates eventodate = new EventoDates();
-                eventodate.Fecha = fecha.Key;
-                foreach(var evento in fecha){
-                    eventodate.id_eventos.Add(evento.Id);
-                }
-                eventosDates.Add(eventodate);
-            }
+            //foreach(var fecha in eventosGroup){
+            //    EventoDates eventodate = new EventoDates();
+            //    eventodate.Fecha = fecha.Key;
+            //    foreach(var evento in fecha){
+            //        eventodate.id_eventos.Add(evento.Id);
+            //    }
+            //    eventosDates.Add(eventodate);
+            //}
 
             return eventosDates; 
         }
