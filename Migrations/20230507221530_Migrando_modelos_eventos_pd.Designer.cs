@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using wb_backend.Models;
@@ -11,9 +12,11 @@ using wb_backend.Models;
 namespace wbbackend.Migrations
 {
     [DbContext(typeof(WujuDbContext))]
-    partial class WujuDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230507221530_Migrando_modelos_eventos_pd")]
+    partial class Migrandomodeloseventospd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

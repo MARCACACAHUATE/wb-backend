@@ -9,6 +9,8 @@ namespace wb_backend.Models {
         public DbSet<Curso> Cursos { get; set; }
         public DbSet<TipoUser> TipoUsers { get; set; }
         public DbSet<EstadoCurso> EstadoCursos { get; set; }
+        public DbSet<Municipio> Municipios { get; set; }
+        public DbSet<EventoSeparacion> EventoSeparacions { get; set; }
         private readonly IConfiguration _config;
 
         public WujuDbContext(
