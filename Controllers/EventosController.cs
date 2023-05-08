@@ -48,12 +48,12 @@ namespace wb_backend.Controllers
             // formato de la fecha
             var regex = @"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$";
             var format_validator = new Regex(regex);
-            if(format_validator.IsMatch(request.Fecha) != true){
-                string message = "Error en el formato de la fecha. El formato debe ser -> dd/MM/yyyy";
-                response.Message = message;
-                response.Estado = 0;
-                return Ok(response);
-            }
+            //if(format_validator.IsMatch(request.Fecha) != true){
+            //    string message = "Error en el formato de la fecha. El formato debe ser -> dd/MM/yyyy";
+            //    response.Message = message;
+            //    response.Estado = 0;
+            //    return Ok(response);
+            //}
 
             response.data = _eventoService.NewEvento(request);
             response.Message = "Evento creado con exito";

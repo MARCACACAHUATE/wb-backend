@@ -32,19 +32,24 @@ namespace wb_backend.Services {
 
         public Evento NewEvento(EventoRequest evento_data){
             // TODO: parsear la fecha de evento_data y utilizarla en el objeto
-            CultureInfo cult = new CultureInfo("es-MX", false);
-            DateTime fecha = DateTime.ParseExact(evento_data.Fecha, _dateFormat, cult);
+            //CultureInfo cult = new CultureInfo("es-MX", false);
+            //DateTime fecha = DateTime.ParseExact(evento_data.Fecha, _dateFormat, cult);
+
+            // obtener el municipio
+            Municipio? municipio  = _dbContext.Municipios.Find(evento_data.Id_Municipio);
+
             Evento evento_nuevo = new Evento{
-                NombrePaquete = evento_data.Nombre,
-                Ocasion = evento_data.Tematica,
-                Servicios = "",
-                Mobiliario = "",
-                ColorGlobos = "",
-                CostoEnvioMaterial = 2.2f,
-                Estado = "",
+                NombrePaquete = evento_data.NombrePaquete,
+                Ocasion = evento_data.Ocasion,
+                Servicios = evento_data.Servicios,
+                Mobiliario = evento_data.Mobiliario,
+                ColorGlobos = evento_data.ColorGlobos,
+                CostoEnvioMaterial = evento_data.CostoEnvioMaterial,
+                Estado = evento_data.Estado,
                 Costo_reservacion = evento_data.Costo_reservacion,
                 Costo_total = evento_data.Costo_total,
             };
+            municipio.Eventos.Add(evento_nuevo);
 
             _dbContext.Eventos.Add(evento_nuevo);
             _dbContext.SaveChanges();
@@ -69,13 +74,18 @@ namespace wb_backend.Services {
         }
 
         public Evento ModifyEvento(int id_evento, EventoRequest data_evento){
-            DateTime fecha = DateTime.ParseExact(data_evento.Fecha, "dd-MM-yyyy", null);
+            //DateTime fecha = DateTime.ParseExact(data_evento.Fecha, "dd-MM-yyyy", null);
 
             Evento evento = GetEvento(id_evento);
-            evento.NombrePaquete = data_evento.Nombre; 
-            evento.Ocasion = data_evento.Tematica;
-            evento.Costo_total = data_evento.Costo_total;
+            evento.NombrePaquete = data_evento.NombrePaquete;
+            evento.Ocasion = data_evento.Ocasion;
+            evento.Servicios = data_evento.Servicios;
+            evento.Mobiliario = data_evento.Mobiliario;
+            evento.ColorGlobos = data_evento.ColorGlobos;
+            evento.CostoEnvioMaterial = data_evento.CostoEnvioMaterial;
+            evento.Estado = data_evento.Estado;
             evento.Costo_reservacion = data_evento.Costo_reservacion;
+            evento.Costo_total = data_evento.Costo_total;
 
             _dbContext.Entry(evento).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             _dbContext.SaveChanges();
