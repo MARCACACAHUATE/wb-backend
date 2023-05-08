@@ -6,7 +6,7 @@ namespace wb_backend.Models {
     public class WujuDbContext : DbContext {
         public DbSet<User> Users { get; set; }
         public DbSet<Evento> Eventos { get; set; }
-        public DbSet<Curso> Cursos { get; set; }
+        public DbSet<Cursos> Cursos { get; set; }
         public DbSet<TipoUser> TipoUsers { get; set; }
         public DbSet<EstadoCurso> EstadoCursos { get; set; }
         public DbSet<Municipio> Municipios { get; set; }

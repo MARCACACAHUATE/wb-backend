@@ -1,8 +1,6 @@
-using wb_backend.Models;
-using wb_backend.Tools.Request;
-using wb_backend.Tools.Response;
-
-namespace wb_backend.Services {
+/* de mientras en comentario en lo que se arregla
+namespace wb_backend.Services
+{
 
     public interface ICursoSepServices {
 
@@ -13,3 +11,4 @@ namespace wb_backend.Services {
         
     }
 }
+*/

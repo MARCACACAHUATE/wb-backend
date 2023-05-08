@@ -1,3 +1,4 @@
+/* de mientras en comentario en lo que se arregla
 using System.Linq;
 using System.Globalization;
 using wb_backend.Models;
@@ -69,3 +70,4 @@ namespace wb_backend.Services {
 
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -133,4 +134,5 @@ namespace wb_backend.Controllers
 
     }
 }
+*/
 

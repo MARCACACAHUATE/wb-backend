@@ -25,7 +25,7 @@ namespace wb_backend.Models {
         public int Id_TipoUser {get; set; }
         [ForeignKey("Id_TipoUser")]
         public TipoUser TipoUser { get; set; } = null!;
-        public virtual ICollection<Curso> Cursos { get; set; } = new List<Curso>();
+        public virtual ICollection<Cursos> Cursos { get; set; } = new List<Cursos>();
         public virtual ICollection<Evento> Eventos { get; set; } = new List<Evento>();
     }
 }
