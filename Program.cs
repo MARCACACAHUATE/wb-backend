@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using wb_backend.Models;
 using wb_backend.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +18,7 @@ DotNetEnv.Env.Load();
 
 // Inject custom services
 builder.Services.AddTransient<IServiceExample, ServiceExample>();
-builder.Services.AddTransient<IEventoServices, EventoServices>();
+//builder.Services.AddTransient<IEventoServices, EventoServices>();
 builder.Services.AddDbContext<WujuDbContext>(options =>{
     string connection = builder.Configuration["ConnectionString"]; 
     string pg_connection = connection != null ? connection : Environment.GetEnvironmentVariable("PGCONNECTION");
@@ -29,6 +31,24 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 
 
 var app = builder.Build();
+
+
+// Test the database connection
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<WujuDbContext>();
+    using var connection = context.Database.GetDbConnection();
+    connection.Open();
+    Console.WriteLine($"Connected to {connection.Database} on {connection.DataSource}");
+}
+catch (NpgsqlException ex)
+{
+    Console.WriteLine($"Error connecting to database: {ex.Message}");
+}
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -45,4 +65,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.UseDefaultFiles();
+
+app.UseStaticFiles();
+
+app.Run();  
+
