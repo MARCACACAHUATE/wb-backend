@@ -23,6 +23,9 @@ builder.Services.AddDbContext<WujuDbContext>(options =>{
     options.UseNpgsql(pg_connection);
     //options.UseNpgsql(builder.Configuration.GetConnectionString("WujuDB"))
 });
+builder.Services.AddControllers().AddNewtonsoftJson(options => 
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 
 
 var app = builder.Build();
