@@ -9,16 +9,19 @@ namespace wb_backend.Services {
     public class EventoSeparacionsServices : IEventoSeparacionsServices {
 
         private readonly WujuDbContext _dbContext;
+        private readonly IEventoServices _eventoServices;
         private readonly string _dateFormat = "dd-MM-yyyy";
 
-        public EventoSeparacionsServices(WujuDbContext dbConetxt) {
+        public EventoSeparacionsServices(WujuDbContext dbConetxt, IEventoServices eventoServices) {
             _dbContext = dbConetxt;
+            _eventoServices = eventoServices;
         }
 
         public EventoSeparacion NewEventoSeparacions(EventoSeparacionsRequest eventoSeparacions_data){
             // TODO: parsear la fecha de evento_data y utilizarla en el objeto
             // CultureInfo cult = new CultureInfo("es-MX", false);
             // DateTime fechaformat = DateTime.ParseExact(eventoSeparacions_data.Fecha, _dateFormat, cult);
+            
 
             EventoSeparacion eventoSeparacions_nuevo = new EventoSeparacion{
                 FirstName = eventoSeparacions_data.FirstName,
@@ -27,12 +30,33 @@ namespace wb_backend.Services {
                 Email = eventoSeparacions_data.Email,
                 HoraEvento = eventoSeparacions_data.HoraEvento,
                 HoraMontaje = eventoSeparacions_data.HoraMontaje,
-                Fecha = eventoSeparacions_data.Fecha,
+                Fecha = eventoSeparacions_data.Fecha.ToUniversalTime(),
                 Calle = eventoSeparacions_data.Calle,
                 Numero = eventoSeparacions_data.Numero,
                 Colonia = eventoSeparacions_data.Colonia,
-                Id_Evento = eventoSeparacions_data.Id_Evento,
+                //Id_Evento = eventoSeparacions_data.Id_Evento,
             };
+
+            // buscar si existe el evento sino crearlo
+            Evento evento;
+            evento = _dbContext.Eventos.Find(eventoSeparacions_data.Id_Evento);
+
+            if(evento == null){
+                evento = _eventoServices.NewEvento(new EventoRequest {
+                    NombrePaquete = "Paquete Default",
+                    Ocasion = "Ocasion Default",
+                    Servicios = "Servicio Default",
+                    Mobiliario = "Default",
+                    ColorGlobos = "Default",
+                    CostoEnvioMaterial = 1,
+                    Costo_reservacion = 1,
+                    Costo_total = 1,
+                    Estado = "Estado Default",
+                    Id_Municipio = 1
+                });
+            }else {
+                eventoSeparacions_nuevo.Evento = evento;
+            }
 
             _dbContext.EventoSeparacions.Add(eventoSeparacions_nuevo);
             _dbContext.SaveChanges();
