@@ -17,8 +17,11 @@ namespace wb_backend.Models {
             DbContextOptions<WujuDbContext> options,
             IConfiguration config
             ) : base(options){
-            _config = config;
         }
+
+        //public WujuDbContext(DbContextOptions options) : base(options)
+        //{
+        //}
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //    => optionsBuilder.UseNpgsql(_config["ConnectionString"]);
