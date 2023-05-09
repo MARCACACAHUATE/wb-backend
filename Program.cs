@@ -16,9 +16,13 @@ builder.Services.AddEndpointsApiExplorer();
 //string connection = builder.Configuration["ConnectionString"]; 
 DotNetEnv.Env.Load();
 
-// Inject custom services
+// ******Inject custom services******
 builder.Services.AddTransient<IServiceExample, ServiceExample>();
-//builder.Services.AddTransient<IEventoServices, EventoServices>();
+
+//Inyeccion del servicio de la tabla de separaciones de los cursos
+builder.Services.AddTransient<ICursoSeparacionService, CursoSeparacionService>();
+
+
 builder.Services.AddDbContext<WujuDbContext>(options =>{
     string connection = builder.Configuration["ConnectionString"]; 
     string pg_connection = connection != null ? connection : Environment.GetEnvironmentVariable("PGCONNECTION");
@@ -33,7 +37,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 var app = builder.Build();
 
 
-// Test the database connection
+// Probando la conexion a la base de datos
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 try
