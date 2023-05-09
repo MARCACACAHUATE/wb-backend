@@ -17,6 +17,7 @@ DotNetEnv.Env.Load();
 // Inject custom services
 builder.Services.AddTransient<IServiceExample, ServiceExample>();
 builder.Services.AddTransient<IEventoServices, EventoServices>();
+builder.Services.AddTransient<IEventoSeparacionsServices, EventoSeparacionsServices>();
 builder.Services.AddDbContext<WujuDbContext>(options =>{
     string connection = builder.Configuration["ConnectionString"]; 
     string pg_connection = connection != null ? connection : Environment.GetEnvironmentVariable("PGCONNECTION");
