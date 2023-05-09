@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+/*using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace wb_backend.Models
@@ -18,3 +18,4 @@ namespace wb_backend.Models
         public User User { get; set; }
     }
 }
+*/

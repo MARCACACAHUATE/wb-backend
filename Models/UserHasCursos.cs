@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+/*using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace wb_backend.Models
@@ -20,3 +20,4 @@ namespace wb_backend.Models
         public virtual User User { get; set; }
     }
 }
+*/
