@@ -11,11 +11,9 @@ namespace wb_backend.Models {
         public DbSet<EstadoCurso> EstadoCursos { get; set; }
         public DbSet<Municipio> Municipios { get; set; }
         public DbSet<EventoSeparacion> EventoSeparacions { get; set; }
-        private readonly IConfiguration _config;
 
         public WujuDbContext(
-            DbContextOptions<WujuDbContext> options,
-            IConfiguration config
+            DbContextOptions<WujuDbContext> options
             ) : base(options){
         }
 

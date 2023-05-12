@@ -11,6 +11,6 @@ namespace wb_backend.Services {
         Evento GetEvento(int id_evento);
         Evento DeleteEvento(int id_evento);
         Evento ModifyEvento(int id_evento, EventoRequest data_evento);
-        List<EventoDates> GetEventoDate(IQueryCollection queryParams);
+        List<EventoDates> GetEventoDate(string? month, string? year);
     }
 }

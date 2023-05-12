@@ -118,12 +118,12 @@ namespace wb_backend.Controllers
 
         [HttpGet]
         [Route("available")]
-        public IActionResult AvailableDates(){
+        public IActionResult AvailableDates(string? month, string? year){
             Response response = new Response();
 
             response.Estado = 1;
             response.Message = "Operacion realizada con exito";            
-            response.data = _eventoService.GetEventoDate(HttpContext.Request.Query);
+            response.data = _eventoService.GetEventoDate(month, year);
 
             return Ok(response);
         }

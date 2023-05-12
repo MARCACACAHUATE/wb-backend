@@ -20,7 +20,7 @@ namespace wb_backend.Tools {
             diciembre = 12
         }
 
-        public Hashtable FechasQueryParamsFilter(string month, string year){
+        public Hashtable FechasQueryParamsFilter(string? month, string? year){
 
             Hashtable data = new Hashtable();
 

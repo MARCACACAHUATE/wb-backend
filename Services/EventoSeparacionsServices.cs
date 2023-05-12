@@ -54,6 +54,7 @@ namespace wb_backend.Services {
                     Estado = "Estado Default",
                     Id_Municipio = 1
                 });
+                eventoSeparacions_nuevo.Evento = evento;
             }else {
                 eventoSeparacions_nuevo.Evento = evento;
             }

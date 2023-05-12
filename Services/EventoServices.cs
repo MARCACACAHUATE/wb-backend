@@ -80,13 +80,13 @@ namespace wb_backend.Services {
             return evento;
         }
 
-        public List<EventoDates> GetEventoDate(IQueryCollection queryParams){
+        public List<EventoDates> GetEventoDate(string? month, string? year){
 
             EventoFilters filtros = new EventoFilters();
             List<EventoSeparacion> eventos_list;
             List<EventoDates> eventosDates = new List<EventoDates>(); 
 
-            Hashtable paramsFiltered = filtros.FechasQueryParamsFilter(queryParams["month"], queryParams["year"]);
+            Hashtable paramsFiltered = filtros.FechasQueryParamsFilter(month, year);
 
 
             // ------ codigo de validacion ------
