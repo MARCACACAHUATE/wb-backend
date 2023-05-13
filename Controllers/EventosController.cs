@@ -37,23 +37,6 @@ namespace wb_backend.Controllers
         [HttpPost]
         public IActionResult CreateEvento(EventoRequest request){
             Response response = new Response();
-            // Validaciones
-            // valor de total y reservacion != 0
-            if(request.Costo_reservacion <= 0 || request.Costo_total <= 0){
-                string message = "El Costo de reservacion o de total no pueden ser 0";
-                response.Message = message;
-                response.Estado = 0;
-                return Ok(response);
-            }
-            // formato de la fecha
-            var regex = @"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$";
-            var format_validator = new Regex(regex);
-            //if(format_validator.IsMatch(request.Fecha) != true){
-            //    string message = "Error en el formato de la fecha. El formato debe ser -> dd/MM/yyyy";
-            //    response.Message = message;
-            //    response.Estado = 0;
-            //    return Ok(response);
-            //}
 
             response.data = _eventoService.NewEvento(request);
             response.Message = "Evento creado con exito";
