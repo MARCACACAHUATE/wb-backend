@@ -20,6 +20,17 @@ namespace wb_backend.Tools {
             diciembre = 12
         }
 
+        /// <summary> 
+        /// Funcion que recibe el año y mes, o cualquiera de los dos, los valida y retorna
+        /// un Hashtable con el rango de fecha inicial y final del mes y año indicado. 
+        /// </summary>
+        /// <returns>
+        /// Un Hashtable con la fecha inicial y final del mes y año.
+        /// Si no recibe alguno de los dos parametros o ninguno de los dos,
+        /// tomará como valores el año y mes actual para generar el rango.
+        /// </returns>
+        /// <param name="month">Nombre del mes del cual se hará el rango de fechas</param>
+        /// <param name="year">Año del cual se tomará el mes</param>
         public Hashtable FechasQueryParamsFilter(string? month, string? year){
 
             Hashtable data = new Hashtable();
