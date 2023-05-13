@@ -8,6 +8,7 @@ namespace wb_backend.Services {
 
         Evento NewEvento(EventoRequest evento_data);
         List<Evento> ListEventos();
+        List<Evento> ListEventosWithFilters(string? month, string? year);
         Evento GetEvento(int id_evento);
         Evento DeleteEvento(int id_evento);
         Evento ModifyEvento(int id_evento, EventoRequest data_evento);

@@ -62,9 +62,15 @@ namespace wb_backend.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetEventosList(){
+        public IActionResult GetEventosList(string? month, string? year){
             Response response = new Response();
-            response.data = _eventoService.ListEventos();
+
+            if(month == null && year == null){
+                response.data = _eventoService.ListEventos();
+            }else{
+
+                response.data = _eventoService.ListEventosWithFilters(month, year);
+            }
             response.Message = "Operacion exitosa";
             response.Estado = 1;
             return Ok(response);

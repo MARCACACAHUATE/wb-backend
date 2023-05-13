@@ -4,6 +4,7 @@ using wb_backend.Models;
 using wb_backend.Tools;
 using wb_backend.Tools.Request;
 using wb_backend.Tools.Response;
+using Microsoft.EntityFrameworkCore;
 
 namespace wb_backend.Services {
 
@@ -44,8 +45,30 @@ namespace wb_backend.Services {
         }
 
         public List<Evento> ListEventos(){
-            List<Evento> list_eventos = _dbContext.Eventos.ToList();
+            List<Evento> list_eventos = _dbContext.Eventos
+                                        .Include(evento => evento.Separacion)
+                                        .ToList();
             return list_eventos;
+        }
+
+        public List<Evento> ListEventosWithFilters(string? month, string? year){
+            EventoFilters filters = new EventoFilters();
+            List<Evento> eventos_list;
+            Hashtable paramsFiltered = filters.FechasQueryParamsFilter(month, year);
+
+            string rango_inicio = paramsFiltered["rango_inicio"].ToString();
+            string rango_final = paramsFiltered["rango_final"].ToString();
+
+            var fecha_inicial = DateTime.ParseExact(rango_inicio, _dateFormat, null);
+            var fecha_final = DateTime.ParseExact(rango_final, _dateFormat, null);
+
+            eventos_list = (from evento in _dbContext.EventoSeparacions
+                            .Include(evento => evento.Evento)
+                            .ToList()
+                            where evento.Fecha >= fecha_inicial &&
+                                  evento.Fecha <= fecha_final
+                            select evento.Evento).ToList();
+            return eventos_list;
         }
 
         public Evento GetEvento(int id_evento){
