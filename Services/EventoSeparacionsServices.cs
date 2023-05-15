@@ -1,8 +1,10 @@
 using System.Linq;
 using System.Globalization;
 using wb_backend.Models;
+using wb_backend .Tools;
 using wb_backend.Tools.Request;
 using wb_backend.Tools.Response;
+using System.ComponentModel.DataAnnotations;
 
 namespace wb_backend.Services {
 
@@ -19,9 +21,17 @@ namespace wb_backend.Services {
 
         public EventoSeparacion NewEventoSeparacions(EventoSeparacionsRequest eventoSeparacions_data){
             // TODO: parsear la fecha de evento_data y utilizarla en el objeto
-            // CultureInfo cult = new CultureInfo("es-MX", false);
-            // DateTime fechaformat = DateTime.ParseExact(eventoSeparacions_data.Fecha, _dateFormat, cult);
+            EventoValidation validator = new EventoValidation();
+
+            if(!validator.ValidateDateFormat(eventoSeparacions_data.Fecha)){
+                throw new ValidationException("Formato de la fecha invalido");
+            }
+
+            validator.ValidateHoraEventoGreaterHoraMontaje(eventoSeparacions_data.HoraMontaje, eventoSeparacions_data.HoraEvento);
             
+            
+            CultureInfo cult = new CultureInfo("es-MX", false);
+            DateTime fechaformat = DateTime.ParseExact(eventoSeparacions_data.Fecha, _dateFormat, cult);
 
             EventoSeparacion eventoSeparacions_nuevo = new EventoSeparacion{
                 FirstName = eventoSeparacions_data.FirstName,
@@ -30,7 +40,7 @@ namespace wb_backend.Services {
                 Email = eventoSeparacions_data.Email,
                 HoraEvento = eventoSeparacions_data.HoraEvento,
                 HoraMontaje = eventoSeparacions_data.HoraMontaje,
-                Fecha = eventoSeparacions_data.Fecha.ToUniversalTime(),
+                Fecha = fechaformat.ToUniversalTime(),
                 Calle = eventoSeparacions_data.Calle,
                 Numero = eventoSeparacions_data.Numero,
                 Colonia = eventoSeparacions_data.Colonia,
@@ -82,9 +92,15 @@ namespace wb_backend.Services {
         }
 
         public EventoSeparacion ModifyEventoSeparacions(int id_eventoSeparacions, EventoSeparacionsRequest data_eventoSeparacions){
-            //DateTime fecha = DateTime.ParseExact(data_evento.Fecha, "dd-MM-yyyy", null);
-            // CultureInfo cult = new CultureInfo("es-MX", false);
-            // DateTime fechaformat = DateTime.ParseExact(data_eventoSeparacions.Fecha, _dateFormat, cult);
+            // TODO: parsear la fecha de evento_data y utilizarla en el objeto
+            EventoValidation validator = new EventoValidation();
+            if(!validator.ValidateDateFormat(data_eventoSeparacions.Fecha)){
+                //throw new ValidationException();
+                return null;
+            }
+
+            CultureInfo cult = new CultureInfo("es-MX", false);
+            DateTime fechaformat = DateTime.ParseExact(data_eventoSeparacions.Fecha, _dateFormat, cult);
             
             EventoSeparacion eventoSeparacions = GetEventoSeparacions(id_eventoSeparacions);
 
@@ -94,7 +110,7 @@ namespace wb_backend.Services {
             eventoSeparacions.Email = data_eventoSeparacions.Email;
             eventoSeparacions.HoraEvento = data_eventoSeparacions.HoraEvento;
             eventoSeparacions.HoraMontaje = data_eventoSeparacions.HoraMontaje;
-            eventoSeparacions.Fecha = data_eventoSeparacions.Fecha;
+            eventoSeparacions.Fecha = fechaformat.ToUniversalTime();
             eventoSeparacions.Calle = data_eventoSeparacions.Calle;
             eventoSeparacions.Numero = data_eventoSeparacions.Numero;
             eventoSeparacions.Colonia = data_eventoSeparacions.Colonia;

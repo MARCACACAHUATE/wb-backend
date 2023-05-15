@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using wb_backend.Models;
 using wb_backend.Tools;
 using wb_backend.Tools.Request;
@@ -22,9 +23,17 @@ namespace wb_backend.Services {
             // TODO: parsear la fecha de evento_data y utilizarla en el objeto
             //CultureInfo cult = new CultureInfo("es-MX", false);
             //DateTime fecha = DateTime.ParseExact(evento_data.Fecha, _dateFormat, cult);
+            EventoValidation validator = new EventoValidation();
 
             // obtener el municipio
             Municipio? municipio  = _dbContext.Municipios.Find(evento_data.Id_Municipio);
+
+            if(municipio == null){
+                throw new ValidationException("El municipio dado no existe");
+            }
+
+            validator.ValidateReservacionIsLessThanTotal(evento_data.Costo_total, evento_data.Costo_reservacion);
+            
 
             Evento evento_nuevo = new Evento{
                 NombrePaquete = evento_data.NombrePaquete,

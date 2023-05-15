@@ -1,4 +1,6 @@
 using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using wb_backend.Tools.Request;
 
 namespace wb_backend.Tools {
@@ -38,6 +40,38 @@ namespace wb_backend.Tools {
                 return false;
             }
             return true;
+        }
+
+        private bool IsHoraEventoGreaterHoraMontaje(string horaMontaje, string horaEvento){
+            CultureInfo ci = new CultureInfo("es-MX");
+            string format = "h\\:mm";
+            TimeSpan horaM = TimeSpan.ParseExact(horaMontaje, format, ci);
+            TimeSpan horaE = TimeSpan.ParseExact(horaEvento, format, ci);
+            var result = TimeSpan.Compare(horaM, horaE);
+            if(result < 0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        public void ValidateHoraEventoGreaterHoraMontaje(string horaMontaje, string horaEvento){
+            if(!IsHoraEventoGreaterHoraMontaje(horaMontaje, horaEvento)){
+                throw new ValidationException("La hora de montaje no puede ser despues o a la misma hora que el evento");
+            }
+        }
+
+        private bool IsReservacionIsLessThanTotal(float costoTotal, float CostoReservacion){
+            if(CostoReservacion <= costoTotal){
+                return true;
+            }
+            return false;
+        }
+
+        public void ValidateReservacionIsLessThanTotal(float costoTotal, float CostoReservacion){
+            if(!IsReservacionIsLessThanTotal(costoTotal, CostoReservacion)){
+                throw new ValidationException("El cosoto de reservacion no puede ser mayor al costo total");
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,11 +38,14 @@ namespace wb_backend.Controllers
         [HttpPost]
         public IActionResult CreateEvento(EventoRequest request){
             Response response = new Response();
-
-            response.data = _eventoService.NewEvento(request);
-            response.Message = "Evento creado con exito";
-            response.Estado = 1;
-            return Ok(response);
+            try{
+                response.data = _eventoService.NewEvento(request);
+                response.Message = "Evento creado con exito";
+                response.Estado = 1;
+                return Ok(response);
+            }catch(ValidationException error){
+                return BadRequest(error.Message);
+            }
         }
 
         [HttpGet]
