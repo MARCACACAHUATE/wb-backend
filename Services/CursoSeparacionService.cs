@@ -26,8 +26,10 @@ namespace wb_backend.Services
         {
             return await _context.CursoSeparacions
                 .Include(c => c.Cursos)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .SingleOrDefaultAsync(c => c.Id == id);
         }
+
+
 
         public async Task<IEnumerable<CursoSeparacion>> GetAllCursoSeparacionesAsync()
         {
@@ -51,7 +53,7 @@ namespace wb_backend.Services
             existingCursoSeparacion.Telefono = cursoSeparacion.Telefono;
             existingCursoSeparacion.Email = cursoSeparacion.Email;
             existingCursoSeparacion.Cantidad_personas_contratadas = cursoSeparacion.Cantidad_personas_contratadas;
-            existingCursoSeparacion.CursosId = cursoSeparacion.CursosId;
+            existingCursoSeparacion.IdCursos = cursoSeparacion.IdCursos;
 
             await _context.SaveChangesAsync();
 

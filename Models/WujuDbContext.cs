@@ -22,10 +22,22 @@ namespace wb_backend.Models {
             _config = config;
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //    => optionsBuilder.UseNpgsql(_config["ConnectionString"]);
+       /* public WujuDbContext(DbContextOptions options) : base(options)
+        {
+        }*/
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging(); // Habilitar registro de datos sensibles
+            base.OnConfiguring(optionsBuilder);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder){
+        modelBuilder.Entity<CursoSeparacion>()
+                    .HasOne(c => c.Cursos)
+                    .WithMany()
+                    .HasForeignKey(c => c.IdCursos);
+
             modelBuilder.Entity<User>()
                 .HasMany(e => e.Cursos)
                 .WithMany(e => e.Users)
@@ -35,6 +47,8 @@ namespace wb_backend.Models {
                 .HasMany(e => e.Eventos)
                 .WithMany(e => e.Users)
                 .UsingEntity("UserHasEventos");
+
+            base.OnModelCreating(modelBuilder);    
         }
     }
 }

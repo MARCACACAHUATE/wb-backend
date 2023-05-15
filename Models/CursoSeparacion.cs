@@ -31,9 +31,10 @@ namespace wb_backend.Models
         public int Cantidad_personas_contratadas { get; set; }
         
         [Required]
-        public int CursosId { get; set; }
+        public int IdCursos { get; set; }
         
-        [ForeignKey("CursosId")]
+        [ForeignKey("IdCursos")]
         public virtual Cursos Cursos { get; set; }
+
     }
 }

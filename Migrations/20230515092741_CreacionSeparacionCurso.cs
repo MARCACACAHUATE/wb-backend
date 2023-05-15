@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
 namespace wbbackend.Migrations
 {
-    public partial class creaciontablacursoseparacion : Migration
+    public partial class CreacionSeparacionCurso : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,24 +10,24 @@ namespace wbbackend.Migrations
                 name: "CursoSeparacion",
                 columns: table => new
                 {
-                    idcurso_separacion = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    first_name = table.Column<string>(type: "varchar(45)", nullable: true),
-                    last_name = table.Column<string>(type: "varchar(45)", nullable: true),
-                    edad = table.Column<int>(type: "int", nullable: false),
-                    telefono = table.Column<int>(type: "int", nullable: false),
-                    email = table.Column<string>(type: "varchar(45)", nullable: true),
-                    cantidad_personas_contratadas = table.Column<int>(type: "int", nullable: true),
+                    First_name = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false),
+                    Last_name = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false),
+                    Edad = table.Column<int>(type: "int", nullable: false),
+                    Telefono = table.Column<int>(type: "int", nullable: false),
+                    Email = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false),
+                    Cantidad_personas_contratadas = table.Column<int>(type: "int", nullable: false),
                     CursosId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CursoSeparacion", x => x.idcurso_separacion);
+                    table.PrimaryKey("PK_CursoSeparacion", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CursoSeparacion_Cursos_CursosId",
                         column: x => x.CursosId,
                         principalTable: "Cursos",
-                        principalColumn: "Id",
+                        principalColumn: "IdCursos",
                         onDelete: ReferentialAction.Cascade);
                 });
 

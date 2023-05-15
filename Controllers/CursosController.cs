@@ -1,87 +1,73 @@
-/*
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using wb_backend.Models;
+using wb_backend.Services;
 
-namespace wb_backend.Controllers {
-
-    [ApiController]
+namespace wb_backend.Controllers
+{
     [Route("api/[controller]")]
-    public class CursosController : ControllerBase {
+    [ApiController]
+    public class CursosController : ControllerBase
+    {
+        private readonly ICursoService _cursoService;
 
-        private readonly WujuDbContext _context;
-
-        public CursosController(WujuDbContext context) {
-            _context = context;
+        public CursosController(ICursoService cursoService)
+        {
+            _cursoService = cursoService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Curso>>> GetCursos() {
-            return await _context.Cursos.ToListAsync();
+        public async Task<ActionResult<List<Cursos>>> GetCursos()
+        {
+            var cursos = await _cursoService.GetCursosAsync();
+            return Ok(cursos);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Curso>> GetCurso(int id) {
-            var curso = await _context.Cursos.FindAsync(id);
+            [HttpGet("{id}")]
+        public async Task<ActionResult<Cursos>> GetCursoById(int id)
+        {
+            var curso = await _cursoService.GetCursoByIdAsync(id);
 
-            if (curso == null) {
+            if (curso == null)
+            {
                 return NotFound();
             }
 
-            return curso;
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> ActualizarCurso(int id, Curso curso) {
-            if (id != curso.Id) {
-                return BadRequest();
-            }
-
-            _context.Entry(curso).State = EntityState.Modified;
-
-            try {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException) {
-                if (!CursoExists(id)) {
-                    return NotFound();
-                }
-                else {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(curso);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Curso>> AddCourse(Curso curso) {
-            _context.Cursos.Add(curso);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetCurso), new { id = curso.Id }, curso);
+        public async Task<ActionResult<Cursos>> CreateCurso(Cursos curso)
+        {
+            var createdCurso = await _cursoService.CreateCursoAsync(curso);
+            return CreatedAtAction(nameof(GetCursoById), new { id = createdCurso.IdCursos }, createdCurso);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> BorrarCurso(int id) {
-            var curso = await _context.Cursos.FindAsync(id);
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCurso(int id, Cursos curso)
+        {
+            var updatedCurso = await _cursoService.UpdateCursoAsync(id, curso);
 
-            if (curso == null) {
+            if (updatedCurso == null)
+            {
                 return NotFound();
             }
-
-            _context.Cursos.Remove(curso);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CursoExists(int id) {
-            return _context.Cursos.Any(c => c.Id == id);
-        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCurso(int id)
+        {
+            var result = await _cursoService.DeleteCursoAsync(id);
+
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+                }
     }
 }
-*/
