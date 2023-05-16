@@ -26,7 +26,7 @@ namespace Tests.Services
                 .UseInMemoryDatabase(databaseName: "TestDatabase")
                 .Options;
 
-            _dbContext = new WujuDbContext(options,null);
+            _dbContext = new WujuDbContext(options);
             _cursoSeparacionService = new CursoSeparacionService(_dbContext);
         }
 
