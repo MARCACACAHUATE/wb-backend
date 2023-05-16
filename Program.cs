@@ -29,9 +29,13 @@ builder.Services.AddTransient<IServiceExample, ServiceExample>();
 
 //Inyeccion del servicio de la tabla de separaciones de los cursos
 builder.Services.AddTransient<ICursoSeparacionService, CursoSeparacionService>();
-
-
+builder.Services.AddTransient<ICursoService, CursoService>();
+builder.Services.AddTransient<IEventoServices, EventoServices>();
+builder.Services.AddTransient<IEventoSeparacionsServices, EventoSeparacionsServices>();
+builder.Services.AddTransient<IUserServices, UserServices>();
 builder.Services.AddDbContext<WujuDbContext>(options =>{
+
+
     string connection = builder.Configuration["ConnectionString"]; 
     string pg_connection = connection != null ? connection : Environment.GetEnvironmentVariable("PGCONNECTION");
     options.UseNpgsql(pg_connection);

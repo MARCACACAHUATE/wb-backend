@@ -1,8 +1,11 @@
 using System.Linq;
-using System.Globalization;
+using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using wb_backend.Models;
+using wb_backend.Tools;
 using wb_backend.Tools.Request;
 using wb_backend.Tools.Response;
+using Microsoft.EntityFrameworkCore;
 
 namespace wb_backend.Services {
 
@@ -11,20 +14,6 @@ namespace wb_backend.Services {
         private readonly WujuDbContext _dbContext;
         private readonly string _dateFormat = "dd-MM-yyyy";
 
-        private enum Months {
-            enero = 1,
-            febrero = 2,
-            marzo = 3,
-            abril = 4,
-            mayo = 5,
-            junio = 6,
-            julio = 7,
-            agosto = 8,
-            septiembre = 9,
-            octubre = 10,
-            noviembre = 11,
-            diciembre = 12
-        }
 
         public EventoServices(WujuDbContext dbConetxt) {
             _dbContext = dbConetxt;
@@ -34,9 +23,17 @@ namespace wb_backend.Services {
             // TODO: parsear la fecha de evento_data y utilizarla en el objeto
             //CultureInfo cult = new CultureInfo("es-MX", false);
             //DateTime fecha = DateTime.ParseExact(evento_data.Fecha, _dateFormat, cult);
+            EventoValidation validator = new EventoValidation();
 
             // obtener el municipio
             Municipio? municipio  = _dbContext.Municipios.Find(evento_data.Id_Municipio);
+
+            if(municipio == null){
+                throw new ValidationException("El municipio dado no existe");
+            }
+
+            validator.ValidateReservacionIsLessThanTotal(evento_data.Costo_total, evento_data.Costo_reservacion);
+            
 
             Evento evento_nuevo = new Evento{
                 NombrePaquete = evento_data.NombrePaquete,
@@ -57,8 +54,30 @@ namespace wb_backend.Services {
         }
 
         public List<Evento> ListEventos(){
-            List<Evento> list_eventos = _dbContext.Eventos.ToList();
+            List<Evento> list_eventos = _dbContext.Eventos
+                                        .Include(evento => evento.Separacion)
+                                        .ToList();
             return list_eventos;
+        }
+
+        public List<Evento> ListEventosWithFilters(string? month, string? year){
+            EventoFilters filters = new EventoFilters();
+            List<Evento> eventos_list;
+            Hashtable paramsFiltered = filters.FechasQueryParamsFilter(month, year);
+
+            string rango_inicio = paramsFiltered["rango_inicio"].ToString();
+            string rango_final = paramsFiltered["rango_final"].ToString();
+
+            var fecha_inicial = DateTime.ParseExact(rango_inicio, _dateFormat, null);
+            var fecha_final = DateTime.ParseExact(rango_final, _dateFormat, null);
+
+            eventos_list = (from evento in _dbContext.EventoSeparacions
+                            .Include(evento => evento.Evento)
+                            .ToList()
+                            where evento.Fecha >= fecha_inicial &&
+                                  evento.Fecha <= fecha_final
+                            select evento.Evento).ToList();
+            return eventos_list;
         }
 
         public Evento GetEvento(int id_evento){
@@ -93,73 +112,39 @@ namespace wb_backend.Services {
             return evento;
         }
 
-        public List<EventoDates> GetEventoDate(IQueryCollection queryParams){
+        public List<EventoDates> GetEventoDate(string? month, string? year){
 
-            List<Evento> eventos_list;
+            EventoFilters filtros = new EventoFilters();
+            List<EventoSeparacion> eventos_list;
             List<EventoDates> eventosDates = new List<EventoDates>(); 
 
-            // ------ validar que estan los query params ------
+            Hashtable paramsFiltered = filtros.FechasQueryParamsFilter(month, year);
 
-            // default values
-            CultureInfo ci = new CultureInfo("es-MX");
-            DateTime fecha_test = DateTime.UtcNow;
-            string mes_formateado = fecha_test.ToString("MMMM", ci);
-            string año_formateado = fecha_test.ToString("yyyy", ci);
-            // default values
-
-            int year;
-            string? month_param = queryParams["month"];
-            string monthName;
-            string monthKey = "1";
-
-            // validate values
-            // year
-            if(!Int32.TryParse(queryParams["year"], out year)){
-                year = Int32.Parse(año_formateado);
-            }
-
-            // month
-            if(String.IsNullOrEmpty(month_param)){
-                monthName = mes_formateado;
-            }else {
-                monthName = month_param;
-            }
-
-            if(Enum.IsDefined(typeof(Months), monthName)){
-                foreach(string _monthName in Enum.GetNames(typeof(Months))){
-                    if(monthName == _monthName){
-                        monthKey = ((int)Enum.Parse(typeof(Months), monthName)).ToString(); 
-                        monthKey = monthKey.Length != 2 ? "0" + monthKey : monthKey;
-                        Console.WriteLine(monthKey);
-                        break;
-                    }
-                }
-            }
 
             // ------ codigo de validacion ------
-            string rango_inicio = $"01-{monthKey}-{year}";
-            string rango_final = $"31-{monthKey}-{year}";
+            string rango_inicio = paramsFiltered["rango_inicio"].ToString();
+            string rango_final = paramsFiltered["rango_final"].ToString();
 
             var fecha_inicial = DateTime.ParseExact(rango_inicio, _dateFormat, null);
             var fecha_final = DateTime.ParseExact(rango_final, _dateFormat, null);
 
-            eventos_list = (from evento in _dbContext.Eventos.ToList()
-            //                where evento.Fecha >= fecha_inicial &&
-            //                      evento.Fecha <= fecha_final
+            eventos_list = (from evento in _dbContext.EventoSeparacions.ToList()
+                            where evento.Fecha >= fecha_inicial &&
+                                  evento.Fecha <= fecha_final
                             select evento).ToList();
 
-            //var eventosGroup = (from item in eventos_list
-             //                   orderby item.Fecha ascending
-              //                  group item by item.Fecha).ToList();
+            var eventosGroup = (from item in eventos_list
+                                orderby item.Fecha ascending
+                                group item by item.Fecha).ToList();
 
-            //foreach(var fecha in eventosGroup){
-            //    EventoDates eventodate = new EventoDates();
-            //    eventodate.Fecha = fecha.Key;
-            //    foreach(var evento in fecha){
-            //        eventodate.id_eventos.Add(evento.Id);
-            //    }
-            //    eventosDates.Add(eventodate);
-            //}
+            foreach(var fecha in eventosGroup){
+                EventoDates eventodate = new EventoDates();
+                eventodate.Fecha = fecha.Key;
+                foreach(var evento in fecha){
+                    eventodate.id_eventos.Add(evento.Id_Evento);
+                }
+                eventosDates.Add(eventodate);
+            }
 
             return eventosDates; 
         }

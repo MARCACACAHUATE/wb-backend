@@ -11,17 +11,19 @@ namespace wb_backend.Models {
         public DbSet<EstadoCurso> EstadoCursos { get; set; }
         public DbSet<Municipio> Municipios { get; set; }
         public DbSet<EventoSeparacion> EventoSeparacions { get; set; }
+<<<<<<< HEAD
         public DbSet<CursoSeparacion> CursoSeparacions { get; set; }
 
         private readonly IConfiguration _config;
+=======
+>>>>>>> upstream/eventos_dev
 
         public WujuDbContext(
-            DbContextOptions<WujuDbContext> options,
-            IConfiguration config
+            DbContextOptions<WujuDbContext> options
             ) : base(options){
-            _config = config;
         }
 
+<<<<<<< HEAD
        /* public WujuDbContext(DbContextOptions options) : base(options)
         {
         }*/
@@ -31,6 +33,14 @@ namespace wb_backend.Models {
             optionsBuilder.EnableSensitiveDataLogging(); // Habilitar registro de datos sensibles
             base.OnConfiguring(optionsBuilder);
         }
+=======
+        //public WujuDbContext(DbContextOptions options) : base(options)
+        //{
+        //}
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //    => optionsBuilder.UseNpgsql(_config["ConnectionString"]);
+>>>>>>> upstream/eventos_dev
 
         protected override void OnModelCreating(ModelBuilder modelBuilder){
         modelBuilder.Entity<CursoSeparacion>()

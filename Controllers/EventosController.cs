@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,34 +38,26 @@ namespace wb_backend.Controllers
         [HttpPost]
         public IActionResult CreateEvento(EventoRequest request){
             Response response = new Response();
-            // Validaciones
-            // valor de total y reservacion != 0
-            if(request.Costo_reservacion <= 0 || request.Costo_total <= 0){
-                string message = "El Costo de reservacion o de total no pueden ser 0";
-                response.Message = message;
-                response.Estado = 0;
+            try{
+                response.data = _eventoService.NewEvento(request);
+                response.Message = "Evento creado con exito";
+                response.Estado = 1;
                 return Ok(response);
+            }catch(ValidationException error){
+                return BadRequest(error.Message);
             }
-            // formato de la fecha
-            var regex = @"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$";
-            var format_validator = new Regex(regex);
-            //if(format_validator.IsMatch(request.Fecha) != true){
-            //    string message = "Error en el formato de la fecha. El formato debe ser -> dd/MM/yyyy";
-            //    response.Message = message;
-            //    response.Estado = 0;
-            //    return Ok(response);
-            //}
-
-            response.data = _eventoService.NewEvento(request);
-            response.Message = "Evento creado con exito";
-            response.Estado = 1;
-            return Ok(response);
         }
 
         [HttpGet]
-        public IActionResult GetEventosList(){
+        public IActionResult GetEventosList(string? month, string? year){
             Response response = new Response();
-            response.data = _eventoService.ListEventos();
+
+            if(month == null && year == null){
+                response.data = _eventoService.ListEventos();
+            }else{
+
+                response.data = _eventoService.ListEventosWithFilters(month, year);
+            }
             response.Message = "Operacion exitosa";
             response.Estado = 1;
             return Ok(response);
@@ -118,12 +111,12 @@ namespace wb_backend.Controllers
 
         [HttpGet]
         [Route("available")]
-        public IActionResult AvailableDates(){
+        public IActionResult AvailableDates(string? month, string? year){
             Response response = new Response();
 
             response.Estado = 1;
             response.Message = "Operacion realizada con exito";            
-            response.data = _eventoService.GetEventoDate(HttpContext.Request.Query);
+            response.data = _eventoService.GetEventoDate(month, year);
 
             return Ok(response);
         }
