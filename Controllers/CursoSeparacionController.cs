@@ -25,18 +25,24 @@ namespace wb_backend.Controllers
             return Ok(cursoSeparaciones);
         }
 
+        [HttpGet("curso/{cursoId}/separaciones")]
+        public async Task<ActionResult<List<CursoSeparacion>>> GetSeparacionesByCursoId(int cursoId)
+        {
+            var separaciones = await _cursoSeparacionService.GetSeparacionesByCursoIdAsync(cursoId);
+            return Ok(separaciones);
+        }
+
+
         // GET: api/CursoSeparacion/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CursoSeparacion>> GetCursoSeparacion(int id)
+        public async Task<ActionResult<CursoSeparacion>> GetSeparacionById(int id)
         {
-            var cursoSeparacion = await _cursoSeparacionService.GetCursoSeparacionByIdAsync(id);
-
-            if (cursoSeparacion == null)
+            var separacion = await _cursoSeparacionService.GetCursoSeparacionByIdAsync(id);
+            if (separacion == null)
             {
                 return NotFound();
             }
-
-            return Ok(cursoSeparacion);
+            return Ok(separacion);
         }
 
         // POST: api/CursoSeparacion
@@ -44,7 +50,7 @@ namespace wb_backend.Controllers
         public async Task<ActionResult<CursoSeparacion>> PostCursoSeparacion(CursoSeparacion cursoSeparacion)
         {
             var createdCursoSeparacion = await _cursoSeparacionService.CreateCursoSeparacionAsync(cursoSeparacion);
-            return CreatedAtAction(nameof(GetCursoSeparacion), new { id = createdCursoSeparacion.Id }, createdCursoSeparacion);
+            return CreatedAtAction(nameof(GetSeparacionById), new { id = createdCursoSeparacion.Id }, createdCursoSeparacion);
         }
 
         // PUT: api/CursoSeparacion/5

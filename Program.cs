@@ -7,6 +7,14 @@ using wb_backend.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var myCors = "myCors";
+builder.Services.AddCors(options => {
+    options.AddPolicy(name: myCors,
+    policy => {
+        policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+    });
+});
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -72,6 +80,8 @@ app.MapControllers();
 app.UseDefaultFiles();
 
 app.UseStaticFiles();
+
+app.UseCors(myCors);
 
 app.Run();  
 

@@ -24,9 +24,7 @@ namespace wb_backend.Services
 
         public async Task<CursoSeparacion> GetCursoSeparacionByIdAsync(int id)
         {
-            return await _context.CursoSeparacions
-                .Include(c => c.Cursos)
-                .SingleOrDefaultAsync(c => c.Id == id);
+           return await _context.CursoSeparacions.FindAsync(id);
         }
 
 
@@ -79,5 +77,13 @@ namespace wb_backend.Services
         {
         return await _context.CursoSeparacions.ToListAsync();
         }
+
+        public async Task<List<CursoSeparacion>> GetSeparacionesByCursoIdAsync(int cursoId)
+        {
+            return await _context.CursoSeparacions
+                .Where(cs => cs.IdCursos == cursoId)
+                .ToListAsync();
+        }
+
     }
 }

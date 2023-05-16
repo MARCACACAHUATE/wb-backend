@@ -12,6 +12,7 @@ namespace wb_backend.Services
         Task<CursoSeparacion> UpdateCursoSeparacionAsync(int id, CursoSeparacion updatedCursoSeparacion);
         Task<bool> DeleteCursoSeparacionAsync(int id);
         Task<List<CursoSeparacion>> GetCursoSeparacionesAsync();
+        Task<List<CursoSeparacion>> GetSeparacionesByCursoIdAsync(int cursoId);
 
     }
 }

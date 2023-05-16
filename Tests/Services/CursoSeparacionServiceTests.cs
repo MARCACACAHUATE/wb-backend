@@ -170,6 +170,31 @@ namespace Tests.Services
             Assert.IsTrue(result.All(cs => cursoSeparaciones.Contains(cs)));
         }
 
+
+        [Test]
+        public async Task GetSeparacionesByCursoIdAsync_Should_Return_Separaciones_With_Given_CursoId()
+        {
+            // Arrange
+            int cursoId = 1;
+            var separaciones = new List<CursoSeparacion>
+            {
+                new CursoSeparacion { Id = 1, IdCursos = 1, First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= 73374283, Email = "luis@hotmail.com", Cantidad_personas_contratadas=1 },
+                new CursoSeparacion { Id = 2, IdCursos = 1, First_name = "Jorge", Last_name = "Lopez", Edad=20, Telefono= 65465185, Email = "jorge@hotmail.com", Cantidad_personas_contratadas=1 },
+                new CursoSeparacion { Id = 3, IdCursos = 2, First_name = "Dana", Last_name = "Lopez", Edad=20, Telefono= 68411975, Email = "dana@hotmail.com", Cantidad_personas_contratadas=1, },
+            };
+
+            _dbContext.CursoSeparacions.AddRange(separaciones);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            var result = await _cursoSeparacionService.GetSeparacionesByCursoIdAsync(cursoId);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().HaveCount(2);
+            result.Should().OnlyContain(s => s.IdCursos == cursoId);
+        }
+
     }
 
 
