@@ -16,6 +16,7 @@ namespace wb_backend.Tools.Request {
         public string HoraEvento { get; set; } = null!;
         [HourFormat]
         public string HoraMontaje { get; set; } = null!;
+        [ThreeDaysAfterToday]
         public string Fecha { get; set; } = null!;
         public string Calle { get; set; } = null!;
         public string Numero { get; set; } = null!;
