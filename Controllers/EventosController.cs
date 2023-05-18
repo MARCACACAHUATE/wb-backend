@@ -120,5 +120,18 @@ namespace wb_backend.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet]
+        [Route("pagination")]
+        public IActionResult GetEventosListPagination(int pagina=1, int registros_pagina=10){
+        PaginacionResponse<Evento> response;
+            try{
+                response = _eventoService.ListEventosWithPaginacion(pagina, registros_pagina);
+                return Ok(response);
+            }catch(Exception error){
+                return BadRequest(error.Message);
+            }
+
+        }
     }
 }

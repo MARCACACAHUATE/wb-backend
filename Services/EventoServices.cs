@@ -60,6 +60,38 @@ namespace wb_backend.Services {
             return list_eventos;
         }
 
+        public PaginacionResponse<Evento> ListEventosWithPaginacion(int pagina, int registrosPagina){
+            List<Evento> eventos = ListEventos();
+            string urlBase = "/api/eventos/pagination?";
+
+            int totalRegistros = eventos.Count(); 
+
+            eventos = eventos.Skip((pagina - 1) * registrosPagina)
+                                            .Take(registrosPagina)
+                                            .OrderByDescending(evento => evento.Separacion.Fecha)
+                                            .ToList();
+            int totalPaginas = (int)Math.Ceiling((double)totalRegistros / registrosPagina);
+
+            PaginacionResponse<Evento> response = new PaginacionResponse<Evento>{
+                RegistrosPorPagina = registrosPagina,
+                TotalRegistros = totalRegistros,
+                TotalPaginas = totalPaginas,
+                PaignaActual = pagina,
+                Data = eventos
+            }; 
+
+            if(pagina >= 1 && pagina <= totalPaginas){
+                if(pagina + 1 <= totalPaginas){
+                    response.PaginaSiguiente = urlBase + $"pagina={pagina + 1}&registros_pagina={registrosPagina}";                
+                }
+                if(pagina - 1 > 0){
+                    response.PaginaAnterior = urlBase + $"pagina={pagina - 1}&registros_pagina={registrosPagina}";                
+                }
+            }
+            
+            return response;
+        }
+
         public List<Evento> ListEventosWithFilters(string? month, string? year){
             EventoFilters filters = new EventoFilters();
             List<Evento> eventos_list;
