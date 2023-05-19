@@ -31,11 +31,17 @@ public class UserServices : IUserServices {
             _dbContext.SaveChanges();
         }
 
+        if(request.Password != request.ConfirmPassword){
+            throw new Exception("Las contraseñas no son iguales");
+        }
+        
+        string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
         User new_user = new User{
             First_name = request.First_name,
             Last_name = request.Last_name,
             Email = request.Email,
-            Password = request.Password,
+            Password = passwordHash,
             Telefono = Int32.Parse(request.Telefono),
             Calle = request.Calle,
             Numero = request.Numero,
@@ -68,13 +74,16 @@ public class UserServices : IUserServices {
         User user;
         try{
             user = _dbContext.Users.Single(user => user.Email == email);
-        }catch(Exception){
-            throw new Exception("Usuario no existe");
+        }catch(Exception error){
+            throw new Exception($"Datos del usuario invaildos");
         }
         // desencriptar la password
-        string passwordUncrypted = user.Password;
+        bool passwordUncrypted = BCrypt.Net.BCrypt.Verify(password, user.Password);
+        if(!passwordUncrypted){
+            throw new Exception("Datos del usuario invaildos");
+        }
 
-        if(email == user.Email && passwordUncrypted == password){
+        if(email == user.Email){
             var keyBytes = Encoding.ASCII.GetBytes(_secretKey);
             ClaimsIdentity claims = new ClaimsIdentity();
 

@@ -10,7 +10,8 @@ public class UserRequest {
         [EmailAddress]
         public string Email { get; set; } = "";
         [Required]
-        public string Password { get; set; } = "";
+        public string Password { get; set; } = null!;
+        public string ConfirmPassword { get; set; } = null!;
         [Required]
         [MinLength(10)]
         [MaxLength(10)]
