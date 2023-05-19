@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using wb_backend.Services;
 using wb_backend.Tools.Request;
 using wb_backend.Tools.Response;
@@ -52,6 +52,23 @@ public class UsersController: ControllerBase {
             return Ok(response);
         }catch(Exception error){
             return BadRequest(error.Message);
+        }
+    }
+
+    [HttpPost]
+    [Route("auth")]
+    public IActionResult ValidateUser(UserLoginCredentials request){
+        try{
+            string token = _userServices.AuthUser(request.Email, request.Password);
+            return Ok(new {
+                Message = "token generadoo con exito",
+                token = token
+            });
+
+        }catch(Exception error){
+            return StatusCode(StatusCodes.Status401Unauthorized, new {
+                error = error.Message
+            });
         }
     }
 

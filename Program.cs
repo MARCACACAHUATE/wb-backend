@@ -1,10 +1,31 @@
+using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using wb_backend.Models;
 using wb_backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+DotNetEnv.Env.Load();
 
 // Add services to the container.
+
+// jwt
+string secretKey = Environment.GetEnvironmentVariable("SECRETKEY");
+var keyBytes = Encoding.UTF8.GetBytes(secretKey);
+builder.Services.AddAuthentication(config => {
+    config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(config => {
+    config.RequireHttpsMetadata = false;
+    config.SaveToken = true;
+    config.TokenValidationParameters = new TokenValidationParameters{
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -12,7 +33,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //string connection = builder.Configuration["ConnectionString"]; 
-DotNetEnv.Env.Load();
 
 // Inject custom services
 builder.Services.AddTransient<IServiceExample, ServiceExample>();
@@ -43,6 +63,8 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

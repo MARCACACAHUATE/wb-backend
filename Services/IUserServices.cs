@@ -7,4 +7,6 @@ public interface IUserServices {
     User NewUser(UserRequest request);
     List<User> GetUserList();
     User GetUserById(int id);
+
+    string AuthUser(string email, string password);
 }
