@@ -8,6 +8,7 @@ namespace wb_backend.Models {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string? NombrePaquete { get; set; }
+        public string? ImageUrl { get; set; }
         public string? Ocasion { get; set; }
         public string? Servicios { get; set; }
         public string? Mobiliario { get; set; }
@@ -19,6 +20,7 @@ namespace wb_backend.Models {
         public float Costo_reservacion { get; set; }
         [Required]
         public float Costo_total { get; set; }
+        public bool ConfirmaciónPago { get; set; } = false;
         public int Id_Municipio { get; set; }
         [ForeignKey("Id_Municipio")]
         public Municipio Municipio { get; set; } = null!;
