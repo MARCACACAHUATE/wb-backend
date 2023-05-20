@@ -3,6 +3,7 @@ using System.Text;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using wb_backend.Models;
 using wb_backend.Tools.Request;
 
@@ -67,6 +68,20 @@ public class UserServices : IUserServices {
             throw new ValidationException($"Usuario con id {id} no encontrado");
         }
         return user;     
+    }
+
+    public User ModifyUser(int id, UserModifyRequest request){
+        User user = GetUserById(id);
+        user.First_name = request.First_name;
+        user.Last_name = request.Last_name;
+        user.Email = request.Email;
+        user.Telefono = Int32.Parse(request.Telefono);
+        user.Calle = request.Calle;
+        user.Numero = request.Municipio;
+
+        _dbContext.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+        _dbContext.SaveChanges();
+        return user;
     }
 
     public string AuthUser(string email, string password){

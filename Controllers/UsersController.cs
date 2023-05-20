@@ -55,6 +55,19 @@ public class UsersController: ControllerBase {
         }
     }
 
+    [HttpPut("{id}")]
+    public IActionResult ModifyUsuario(int id, UserModifyRequest request){
+        Response response = new Response();
+        try{
+            response.data = _userServices.ModifyUser(id, request);
+            response.Message = "Operacion Existosa";
+            response.Estado = 1;
+            return Ok(response);
+        }catch(Exception error){
+            return BadRequest(error.Message);
+        }
+    }
+
     [HttpPost]
     [Route("auth")]
     public IActionResult ValidateUser(UserLoginCredentials request){
