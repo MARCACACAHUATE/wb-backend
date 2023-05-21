@@ -9,5 +9,6 @@ public interface IUserServices {
     List<User> GetUserList();
     User GetUserById(int id);
     User ModifyUser(int id, UserModifyRequest request);
+    User DeleteUser(int id);
     AuthenticateResponse AuthUser(string email, string password);
 }

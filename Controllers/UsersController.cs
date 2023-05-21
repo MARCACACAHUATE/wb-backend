@@ -71,6 +71,19 @@ public class UsersController: ControllerBase {
         }
     }
 
+    [HttpDelete("{id}")]
+    public IActionResult DeleteUser(int id){
+        Response response = new Response();
+        try{
+            response.data = _userServices.DeleteUser(id);
+            response.Message = "Operacion Existosa";
+            response.Estado = 1;
+            return Ok(response);
+        }catch(Exception error){
+            return BadRequest(error.Message);
+        }
+    }
+
     [HttpPost]
     [Route("auth")]
     public IActionResult ValidateUser(UserLoginCredentials request){

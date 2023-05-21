@@ -90,6 +90,13 @@ public class UserServices : IUserServices {
         return user;
     }
 
+    public User DeleteUser(int id){
+        User user = GetUserById(id);
+        _dbContext.Users.Remove(user);
+        _dbContext.SaveChanges();
+        return user;
+    }
+
     public AuthenticateResponse AuthUser(string email, string password){
         User? user = _dbContext.Users.Include(user => user.TipoUser).SingleOrDefault(user => user.Email == email);
 
