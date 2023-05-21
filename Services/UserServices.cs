@@ -48,7 +48,7 @@ public class UserServices : IUserServices {
             Last_name = request.Last_name,
             Email = request.Email,
             Password = passwordHash,
-            Telefono = Int32.Parse(request.Telefono),
+            Telefono = request.Telefono,
             Calle = request.Calle,
             Numero = request.Numero,
             Municipio = request.Municipio
@@ -81,9 +81,9 @@ public class UserServices : IUserServices {
         user.First_name = request.First_name;
         user.Last_name = request.Last_name;
         user.Email = request.Email;
-        user.Telefono = Int32.Parse(request.Telefono);
+        user.Telefono = request.Telefono;
         user.Calle = request.Calle;
-        user.Numero = request.Municipio;
+        user.Numero = request.Numero;
 
         _dbContext.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
         _dbContext.SaveChanges();

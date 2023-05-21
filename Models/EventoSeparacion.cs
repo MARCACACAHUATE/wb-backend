@@ -15,6 +15,7 @@ namespace wb_backend.Models {
         public string Telefono { get; set; } = null!;
         [Required]
         public string Email { get; set; }  = null!;
+        public bool ConfirmaciónPago { get; set; } = false;
         public string HoraEvento { get; set; } = null!;
         public string HoraMontaje { get; set; } = null!;
         public DateTime Fecha { get; set; }

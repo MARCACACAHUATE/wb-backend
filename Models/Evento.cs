@@ -20,7 +20,6 @@ namespace wb_backend.Models {
         public float Costo_reservacion { get; set; }
         [Required]
         public float Costo_total { get; set; }
-        public bool ConfirmaciónPago { get; set; } = false;
         public int Id_Municipio { get; set; }
         [ForeignKey("Id_Municipio")]
         public Municipio Municipio { get; set; } = null!;
