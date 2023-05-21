@@ -5,18 +5,22 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using wb_backend.Models;
+using wb_backend.Tools;
+using wb_backend.Tools.Authorization;
 using wb_backend.Tools.Request;
+using wb_backend.Tools.Response;
 
 namespace wb_backend.Services;
 
 public class UserServices : IUserServices {
 
     private readonly WujuDbContext _dbContext;
-    private readonly string _secretKey;
+    private readonly string _secretKey = Environment.GetEnvironmentVariable("SECRETKEY");
+    private readonly IJwtUtils _jwtUtils;
 
-    public UserServices(WujuDbContext dbContext){
+    public UserServices(WujuDbContext dbContext, IJwtUtils jwtUtils){
         _dbContext = dbContext;
-        _secretKey = Environment.GetEnvironmentVariable("SECRETKEY");
+        _jwtUtils = jwtUtils;
     }
 
     public User NewUser(UserRequest request){
@@ -25,9 +29,10 @@ public class UserServices : IUserServices {
         TipoUser tipoUser;
         try{
             tipoUser = _dbContext.TipoUsers.
-                                Single(tipo => tipo.TypeUser == "Cliente");
+                                Single(tipo => tipo.TypeUser == Role.Cliente.ToString());
         }catch(Exception){
-            tipoUser = new TipoUser{ TypeUser="Cliente"};
+            Enum tipoCliente = Role.Cliente;
+            tipoUser = new TipoUser{ TypeUser=tipoCliente.ToString()};
             _dbContext.TipoUsers.Add(tipoUser);
             _dbContext.SaveChanges();
         }
@@ -63,7 +68,8 @@ public class UserServices : IUserServices {
     }
 
     public User GetUserById(int id){
-        User? user = _dbContext.Users.Find(id);
+        User? user = _dbContext.Users.Include(user => user.TipoUser)
+                                     .SingleOrDefault(user => user.Id == id);
         if(user == null){
             throw new ValidationException($"Usuario con id {id} no encontrado");
         }
@@ -84,44 +90,15 @@ public class UserServices : IUserServices {
         return user;
     }
 
-    public string AuthUser(string email, string password){
-        // buscar al usuario mediante el email
-        User user;
-        try{
-            user = _dbContext.Users.Single(user => user.Email == email);
-        }catch(Exception error){
+    public AuthenticateResponse AuthUser(string email, string password){
+        User? user = _dbContext.Users.Include(user => user.TipoUser).SingleOrDefault(user => user.Email == email);
+
+        if(user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password)){
             throw new Exception($"Datos del usuario invaildos");
         }
-        // desencriptar la password
-        bool passwordUncrypted = BCrypt.Net.BCrypt.Verify(password, user.Password);
-        if(!passwordUncrypted){
-            throw new Exception("Datos del usuario invaildos");
-        }
+        
+        var jwtToken = _jwtUtils.GenerateJwtToken(user); 
 
-        if(email == user.Email){
-            var keyBytes = Encoding.ASCII.GetBytes(_secretKey);
-            ClaimsIdentity claims = new ClaimsIdentity();
-
-            claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, email));
-
-            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor{
-                Subject = claims,
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(keyBytes),
-                    SecurityAlgorithms.HmacSha256Signature
-                )
-            };
-
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            var tokenConfig = tokenHandler.CreateToken(tokenDescriptor);
-
-            string tokenCreado = tokenHandler.WriteToken(tokenConfig);
-            return tokenCreado;
-
-        }else{
-            // Datos invalidos 
-            throw new Exception("Datos del usuario incorrectos");;
-        }
+        return new AuthenticateResponse(user, jwtToken);
     }
 }

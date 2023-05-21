@@ -242,9 +242,8 @@ namespace wbbackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("TypeUser")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("TypeUser")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

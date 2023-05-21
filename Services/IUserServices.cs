@@ -1,5 +1,6 @@
 using wb_backend.Models;
 using wb_backend.Tools.Request;
+using wb_backend.Tools.Response;
 
 namespace wb_backend.Services;
 
@@ -8,5 +9,5 @@ public interface IUserServices {
     List<User> GetUserList();
     User GetUserById(int id);
     User ModifyUser(int id, UserModifyRequest request);
-    string AuthUser(string email, string password);
+    AuthenticateResponse AuthUser(string email, string password);
 }

@@ -1,9 +1,11 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using wb_backend.Models;
 using wb_backend.Services;
+using wb_backend.Tools.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
@@ -40,6 +42,7 @@ builder.Services.AddTransient<IEventoServices, EventoServices>();
 builder.Services.AddTransient<IEventoSeparacionsServices, EventoSeparacionsServices>();
 builder.Services.AddTransient<IUserServices, UserServices>();
 builder.Services.AddTransient<IMunicipioServices, MunicipioServices>();
+builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 builder.Services.AddDbContext<WujuDbContext>(options =>{
     string connection = builder.Configuration["ConnectionString"]; 
     string pg_connection = connection != null ? connection : Environment.GetEnvironmentVariable("PGCONNECTION");
@@ -49,6 +52,9 @@ builder.Services.AddDbContext<WujuDbContext>(options =>{
 builder.Services.AddControllers().AddNewtonsoftJson(options => 
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+builder.Services.AddControllers().AddJsonOptions(option => {
+    option.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 
 var app = builder.Build();
@@ -61,6 +67,7 @@ if (app.Environment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>();
 }
 
+app.UseMiddleware<JwtMiddleware>();
 
 app.UseHttpsRedirection();
 
