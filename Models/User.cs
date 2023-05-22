@@ -19,9 +19,6 @@ namespace wb_backend.Models {
         public string? Calle { get; set; }
         public string? Numero { get; set; }
         public string? Municipio { get; set; }
-        public int Id_EstadoCurso { get; set; }
-        [ForeignKey("Id_EstadoCurso")]
-        public EstadoCurso EstadoCurso { get; set; } = null!;
         public int Id_TipoUser {get; set; }
         [ForeignKey("Id_TipoUser")]
         public TipoUser TipoUser { get; set; } = null!;

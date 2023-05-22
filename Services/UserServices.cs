@@ -13,8 +13,6 @@ public class UserServices : IUserServices {
     }
 
     public User NewUser(UserRequest request){
-
-        EstadoCurso? estado = _dbContext.EstadoCursos.Find(1);
         TipoUser tipoUser;
         try{
             tipoUser = _dbContext.TipoUsers.
@@ -35,8 +33,6 @@ public class UserServices : IUserServices {
             Numero = request.Numero,
             Municipio = request.Municipio
         };
-
-        estado.Users.Add(new_user);
         tipoUser.Users.Add(new_user);
 
         _dbContext.Users.Add(new_user);

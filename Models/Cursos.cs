@@ -37,9 +37,9 @@ namespace wb_backend.Models {
         [MaxLength(100)]
         public string? Municipio { get; set; }
 
-        public int IdEstadoCurso { get; set; }
+        public string? EstadoCursoName { get; set; }
 
-        public virtual EstadoCurso EstadoCurso { get; set; }
+        //public virtual ICollection<UserHasCursos> UserHasCursos { get; set; } = new List<UserHasCursos>();
         public virtual ICollection<User> Users { get; set; } = new List<User>();
         public virtual ICollection<CursoSeparacion> CursoSeparacion { get; set; } = new List<CursoSeparacion>();
 

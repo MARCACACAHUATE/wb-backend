@@ -12,8 +12,8 @@ using wb_backend.Models;
 namespace wbbackend.Migrations
 {
     [DbContext(typeof(WujuDbContext))]
-    [Migration("20230515092741_CreacionSeparacionCurso")]
-    partial class CreacionSeparacionCurso
+    [Migration("20230519090216_CreateTableCursos")]
+    partial class CreateTableCursos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,9 +66,6 @@ namespace wbbackend.Migrations
                     b.Property<int>("Cantidad_personas_contratadas")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CursosId")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("CursosIdCursos")
                         .HasColumnType("integer");
 
@@ -85,6 +82,9 @@ namespace wbbackend.Migrations
                         .HasMaxLength(45)
                         .HasColumnType("character varying(45)");
 
+                    b.Property<int>("IdCursos")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Last_name")
                         .IsRequired()
                         .HasMaxLength(45)
@@ -95,9 +95,9 @@ namespace wbbackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CursosId");
-
                     b.HasIndex("CursosIdCursos");
+
+                    b.HasIndex("IdCursos");
 
                     b.ToTable("CursoSeparacions");
                 });
@@ -124,17 +124,14 @@ namespace wbbackend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("EstadoCursoId")
-                        .HasColumnType("integer");
+                    b.Property<string>("EstadoCursoName")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("FechaFin")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("FechaInicio")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("IdEstadoCurso")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Municipio")
                         .HasMaxLength(100)
@@ -153,22 +150,7 @@ namespace wbbackend.Migrations
 
                     b.HasKey("IdCursos");
 
-                    b.HasIndex("EstadoCursoId");
-
                     b.ToTable("Cursos");
-                });
-
-            modelBuilder.Entity("wb_backend.Models.EstadoCurso", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EstadoCursos");
                 });
 
             modelBuilder.Entity("wb_backend.Models.Evento", b =>
@@ -328,9 +310,6 @@ namespace wbbackend.Migrations
                     b.Property<string>("First_name")
                         .HasColumnType("text");
 
-                    b.Property<int>("Id_EstadoCurso")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Id_TipoUser")
                         .HasColumnType("integer");
 
@@ -351,8 +330,6 @@ namespace wbbackend.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id_EstadoCurso");
 
                     b.HasIndex("Id_TipoUser");
 
@@ -391,28 +368,17 @@ namespace wbbackend.Migrations
 
             modelBuilder.Entity("wb_backend.Models.CursoSeparacion", b =>
                 {
-                    b.HasOne("wb_backend.Models.Cursos", "Cursos")
-                        .WithMany()
-                        .HasForeignKey("CursosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("wb_backend.Models.Cursos", null)
-                        .WithMany("CursoSeparacions")
+                        .WithMany("CursoSeparacion")
                         .HasForeignKey("CursosIdCursos");
 
-                    b.Navigation("Cursos");
-                });
-
-            modelBuilder.Entity("wb_backend.Models.Cursos", b =>
-                {
-                    b.HasOne("wb_backend.Models.EstadoCurso", "EstadoCurso")
+                    b.HasOne("wb_backend.Models.Cursos", "Cursos")
                         .WithMany()
-                        .HasForeignKey("EstadoCursoId")
+                        .HasForeignKey("IdCursos")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("EstadoCurso");
+                    b.Navigation("Cursos");
                 });
 
             modelBuilder.Entity("wb_backend.Models.Evento", b =>
@@ -439,31 +405,18 @@ namespace wbbackend.Migrations
 
             modelBuilder.Entity("wb_backend.Models.User", b =>
                 {
-                    b.HasOne("wb_backend.Models.EstadoCurso", "EstadoCurso")
-                        .WithMany("Users")
-                        .HasForeignKey("Id_EstadoCurso")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("wb_backend.Models.TipoUser", "TipoUser")
                         .WithMany("Users")
                         .HasForeignKey("Id_TipoUser")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("EstadoCurso");
-
                     b.Navigation("TipoUser");
                 });
 
             modelBuilder.Entity("wb_backend.Models.Cursos", b =>
                 {
-                    b.Navigation("CursoSeparacions");
-                });
-
-            modelBuilder.Entity("wb_backend.Models.EstadoCurso", b =>
-                {
-                    b.Navigation("Users");
+                    b.Navigation("CursoSeparacion");
                 });
 
             modelBuilder.Entity("wb_backend.Models.Evento", b =>
