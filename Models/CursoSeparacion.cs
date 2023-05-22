@@ -18,7 +18,7 @@ namespace wb_backend.Models
         [StringLength(45)]
         public string Last_name { get; set; }
         
-        [Required]
+        [Required]  
         public int Edad { get; set; }
         
         public int Telefono { get; set; }
