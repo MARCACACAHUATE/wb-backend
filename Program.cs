@@ -6,11 +6,20 @@ using Microsoft.IdentityModel.Tokens;
 using wb_backend.Models;
 using wb_backend.Services;
 using wb_backend.Tools.Authorization;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
 
 // Add services to the container.
+var myCors = "myCors";
+builder.Services.AddCors(options => {
+    options.AddPolicy(name: myCors,
+    policy => {
+        policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+    });
+});
+
 
 // jwt
 string secretKey = Environment.GetEnvironmentVariable("SECRETKEY");
@@ -36,14 +45,20 @@ builder.Services.AddSwaggerGen();
 
 //string connection = builder.Configuration["ConnectionString"]; 
 
-// Inject custom services
+// ******Inject custom services******
 builder.Services.AddTransient<IServiceExample, ServiceExample>();
+
+//Inyeccion del servicio de la tabla de separaciones de los cursos
+builder.Services.AddTransient<ICursoSeparacionService, CursoSeparacionService>();
+builder.Services.AddTransient<ICursoService, CursoService>();
 builder.Services.AddTransient<IEventoServices, EventoServices>();
 builder.Services.AddTransient<IEventoSeparacionsServices, EventoSeparacionsServices>();
 builder.Services.AddTransient<IUserServices, UserServices>();
 builder.Services.AddTransient<IMunicipioServices, MunicipioServices>();
 builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 builder.Services.AddDbContext<WujuDbContext>(options =>{
+
+
     string connection = builder.Configuration["ConnectionString"]; 
     string pg_connection = connection != null ? connection : Environment.GetEnvironmentVariable("PGCONNECTION");
     options.UseNpgsql(pg_connection);
@@ -58,6 +73,24 @@ builder.Services.AddControllers().AddJsonOptions(option => {
 
 
 var app = builder.Build();
+
+
+// Probando la conexion a la base de datos
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<WujuDbContext>();
+    using var connection = context.Database.GetDbConnection();
+    connection.Open();
+    Console.WriteLine($"Connected to {connection.Database} on {connection.DataSource}");
+}
+catch (NpgsqlException ex)
+{
+    Console.WriteLine($"Error connecting to database: {ex.Message}");
+}
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -77,4 +110,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.UseDefaultFiles();
+
+app.UseStaticFiles();
+
+app.UseCors(myCors);
+
+app.Run();  
+
