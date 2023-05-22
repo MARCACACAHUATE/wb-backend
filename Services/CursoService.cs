@@ -26,6 +26,13 @@ namespace wb_backend.Services
 
         public async Task<Cursos> CreateCursoAsync(Cursos curso)
         {
+            // Convertir las fechas a UTC
+            curso.FechaInicio = DateTime.SpecifyKind(curso.FechaInicio, DateTimeKind.Utc);
+            curso.FechaFin = DateTime.SpecifyKind(curso.FechaFin, DateTimeKind.Utc);
+
+            // Guardar los cambios en la base de datos
+            await _context.SaveChangesAsync();
+
             _context.Cursos.Add(curso);
             await _context.SaveChangesAsync();
             return curso;
@@ -51,7 +58,7 @@ namespace wb_backend.Services
             existingCurso.Calle = curso.Calle;
             existingCurso.Numero = curso.Numero;
             existingCurso.Municipio = curso.Municipio;
-            existingCurso.IdEstadoCurso = curso.IdEstadoCurso;
+            existingCurso.EstadoCursoName = curso.EstadoCursoName;
 
             await _context.SaveChangesAsync();
 

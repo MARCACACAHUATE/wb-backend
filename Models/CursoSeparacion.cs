@@ -18,7 +18,7 @@ namespace wb_backend.Models
         [StringLength(45)]
         public string Last_name { get; set; }
         
-        [Required]
+        [Required]  
         public int Edad { get; set; }
         
         public int Telefono { get; set; }
@@ -32,6 +32,8 @@ namespace wb_backend.Models
         
         [Required]
         public int IdCursos { get; set; }
+        [Required]
+        public bool TipoPago { get; set; } = false;
         
         [ForeignKey("IdCursos")]
         public virtual Cursos Cursos { get; set; }

@@ -25,47 +25,7 @@ namespace wbbackend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("wb_backend.Models.Curso", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<float>("Costo_reservacion")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Costo_total")
-                        .HasColumnType("real");
-
-                    b.Property<string>("Direccion")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Espacios_disponibles")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Espacios_restantes")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("Fecha_finalizacion")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("Fecha_inicio")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Tematica")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cursos");
-                });
-
+        
             modelBuilder.Entity("wb_backend.Models.Evento", b =>
                 {
                     b.Property<int>("Id")

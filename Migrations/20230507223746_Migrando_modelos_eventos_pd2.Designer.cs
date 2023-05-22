@@ -25,20 +25,6 @@ namespace wbbackend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("UserHasCursos", b =>
-                {
-                    b.Property<int>("CursosId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CursosId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("UserHasCursos");
-                });
 
             modelBuilder.Entity("UserHasEventos", b =>
                 {
@@ -55,59 +41,6 @@ namespace wbbackend.Migrations
                     b.ToTable("UserHasEventos");
                 });
 
-            modelBuilder.Entity("wb_backend.Models.Curso", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<float>("Costo_reservacion")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Costo_total")
-                        .HasColumnType("real");
-
-                    b.Property<string>("Direccion")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Espacios_disponibles")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Espacios_restantes")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("Fecha_finalizacion")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("Fecha_inicio")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Tematica")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cursos");
-                });
-
-            modelBuilder.Entity("wb_backend.Models.EstadoCurso", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EstadoCursos");
-                });
 
             modelBuilder.Entity("wb_backend.Models.Evento", b =>
                 {
@@ -264,9 +197,6 @@ namespace wbbackend.Migrations
                     b.Property<string>("First_name")
                         .HasColumnType("text");
 
-                    b.Property<int>("Id_EstadoCurso")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Id_TipoUser")
                         .HasColumnType("integer");
 
@@ -288,27 +218,11 @@ namespace wbbackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id_EstadoCurso");
-
                     b.HasIndex("Id_TipoUser");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("UserHasCursos", b =>
-                {
-                    b.HasOne("wb_backend.Models.Curso", null)
-                        .WithMany()
-                        .HasForeignKey("CursosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("wb_backend.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
 
             modelBuilder.Entity("UserHasEventos", b =>
                 {
@@ -338,11 +252,6 @@ namespace wbbackend.Migrations
 
             modelBuilder.Entity("wb_backend.Models.User", b =>
                 {
-                    b.HasOne("wb_backend.Models.EstadoCurso", "EstadoCurso")
-                        .WithMany("Users")
-                        .HasForeignKey("Id_EstadoCurso")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.HasOne("wb_backend.Models.TipoUser", "TipoUser")
                         .WithMany("Users")
@@ -350,14 +259,8 @@ namespace wbbackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("EstadoCurso");
 
                     b.Navigation("TipoUser");
-                });
-
-            modelBuilder.Entity("wb_backend.Models.EstadoCurso", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("wb_backend.Models.Evento", b =>

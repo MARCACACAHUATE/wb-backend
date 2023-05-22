@@ -8,7 +8,6 @@ namespace wb_backend.Models {
         public DbSet<Evento> Eventos { get; set; }
         public DbSet<Cursos> Cursos { get; set; }
         public DbSet<TipoUser> TipoUsers { get; set; }
-        public DbSet<EstadoCurso> EstadoCursos { get; set; }
         public DbSet<Municipio> Municipios { get; set; }
         public DbSet<EventoSeparacion> EventoSeparacions { get; set; }
         public DbSet<CursoSeparacion> CursoSeparacions { get; set; }
@@ -47,6 +46,9 @@ namespace wb_backend.Models {
                 .UsingEntity("UserHasEventos");
 
             base.OnModelCreating(modelBuilder);    
+
+
+            
         }
     }
 }

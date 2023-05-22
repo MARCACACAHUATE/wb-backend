@@ -20,6 +20,7 @@ builder.Services.AddCors(options => {
     });
 });
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // jwt
 string secretKey = Environment.GetEnvironmentVariable("SECRETKEY");

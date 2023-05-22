@@ -25,61 +25,7 @@ namespace wbbackend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Inscripciones_cursos", b =>
-                {
-                    b.Property<int>("CursosId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CursosId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("Inscripciones_cursos");
-                });
-
-            modelBuilder.Entity("wb_backend.Models.Curso", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<float>("Costo_reservacion")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Costo_total")
-                        .HasColumnType("real");
-
-                    b.Property<string>("Direccion")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Espacios_disponibles")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Espacios_restantes")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("Fecha_finalizacion")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("Fecha_inicio")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Tematica")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cursos");
-                });
+        
 
             modelBuilder.Entity("wb_backend.Models.Evento", b =>
                 {
@@ -113,33 +59,7 @@ namespace wbbackend.Migrations
                     b.ToTable("Eventos");
                 });
 
-            modelBuilder.Entity("wb_backend.Models.ReservacionCurso", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Id_curso")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Id_user")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id_curso");
-
-                    b.HasIndex("Id_user");
-
-                    b.ToTable("ReservacionCurso");
-                });
-
+        
             modelBuilder.Entity("wb_backend.Models.ReservacionEvento", b =>
                 {
                     b.Property<int>("Id")
@@ -210,39 +130,7 @@ namespace wbbackend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Inscripciones_cursos", b =>
-                {
-                    b.HasOne("wb_backend.Models.Curso", null)
-                        .WithMany()
-                        .HasForeignKey("CursosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("wb_backend.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("wb_backend.Models.ReservacionCurso", b =>
-                {
-                    b.HasOne("wb_backend.Models.Curso", "Cursos")
-                        .WithMany()
-                        .HasForeignKey("Id_curso")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("wb_backend.Models.User", "Users")
-                        .WithMany("ReservacionCursos")
-                        .HasForeignKey("Id_user")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cursos");
-
-                    b.Navigation("Users");
-                });
+        
 
             modelBuilder.Entity("wb_backend.Models.ReservacionEvento", b =>
                 {
@@ -265,7 +153,6 @@ namespace wbbackend.Migrations
 
             modelBuilder.Entity("wb_backend.Models.User", b =>
                 {
-                    b.Navigation("ReservacionCursos");
 
                     b.Navigation("ReservacionEventos");
                 });
