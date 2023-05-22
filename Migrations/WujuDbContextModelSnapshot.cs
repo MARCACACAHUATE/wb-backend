@@ -90,6 +90,9 @@ namespace wbbackend.Migrations
                     b.Property<int>("Telefono")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("TipoPago")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CursosIdCursos");
@@ -125,10 +128,10 @@ namespace wbbackend.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("FechaFin")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("FechaInicio")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Municipio")
                         .HasMaxLength(100)
@@ -218,7 +221,7 @@ namespace wbbackend.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Fecha")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("FirstName")
                         .IsRequired()

@@ -32,6 +32,8 @@ namespace wb_backend.Models
         
         [Required]
         public int IdCursos { get; set; }
+        [Required]
+        public bool TipoPago { get; set; } = false;
         
         [ForeignKey("IdCursos")]
         public virtual Cursos Cursos { get; set; }
