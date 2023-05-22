@@ -1,4 +1,4 @@
-using System.Linq;
+using System.IO;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using wb_backend.Models;
@@ -179,6 +179,46 @@ namespace wb_backend.Services {
             }
 
             return eventosDates; 
+        }
+
+        public async Task<string> UploadImage(UploadImageRequest request){
+            // verificar que exista la carpeta
+            IFormFile file = request.File;
+            string projectDirectory = Directory.GetCurrentDirectory();
+            string imagePath = Path.Combine(projectDirectory, "Image");
+
+            if(Directory.Exists(imagePath)){
+                Console.WriteLine("El directorio existe");
+            }else{
+                Console.WriteLine("El directorio NO existe, pero en proceso de creacion...");
+                // Creando el diretorio si no existe
+                DirectoryInfo imageDir = Directory.CreateDirectory(imagePath);
+                Console.WriteLine($"Directorio {imageDir.Name} Cerado con Exito");
+                Console.WriteLine($"Path -> {imageDir.FullName}");
+            }
+
+            // Verificar que el archivo es valido
+            string pathSave = "";
+            if(file.Length > 0){
+                // guardar el archivo en la carpeta
+                Evento evento = GetEvento(request.Evento_id);
+                string nombreArchivo = $"evento_{evento.Id}_{evento.Ocasion}_{evento.Servicios}.jpg";
+                pathSave = Path.Combine(imagePath, nombreArchivo);
+                Console.WriteLine(pathSave);
+
+                using(var stream = new FileStream(pathSave, FileMode.Create)){
+                    await file.CopyToAsync(stream);
+                }
+
+                Console.WriteLine($"En el Servicio -> {request.Evento_id}");
+                // guardar el path en la base de datos
+                evento.ImageUrl = pathSave;
+                _dbContext.Entry(evento).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
+                Console.WriteLine("Archivo creado con exito");
+            }
+
+            return pathSave;
         }
 
     }

@@ -133,5 +133,20 @@ namespace wb_backend.Controllers
             }
 
         }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadImageEveto([FromForm] UploadImageRequest request){
+            Response response = new Response();
+            try{
+                response.Message = "Imagen subida con exito";
+                response.Estado = 1;
+                response.data = await _eventoService.UploadImage(request);
+                return Ok(response);
+            }catch(Exception error){
+                response.Message = error.Message;
+                response.Estado = 0;
+                return BadRequest(response);
+            }
+        }
     }
 }
