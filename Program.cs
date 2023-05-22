@@ -1,10 +1,15 @@
+using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using wb_backend.Models;
 using wb_backend.Services;
-
+using wb_backend.Tools.Authorization;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
+DotNetEnv.Env.Load();
 
 // Add services to the container.
 var myCors = "myCors";
@@ -16,13 +21,29 @@ builder.Services.AddCors(options => {
 });
 
 
+// jwt
+string secretKey = Environment.GetEnvironmentVariable("SECRETKEY");
+var keyBytes = Encoding.UTF8.GetBytes(secretKey);
+builder.Services.AddAuthentication(config => {
+    config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(config => {
+    config.RequireHttpsMetadata = false;
+    config.SaveToken = true;
+    config.TokenValidationParameters = new TokenValidationParameters{
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //string connection = builder.Configuration["ConnectionString"]; 
-DotNetEnv.Env.Load();
 
 // ******Inject custom services******
 builder.Services.AddTransient<IServiceExample, ServiceExample>();
@@ -34,6 +55,7 @@ builder.Services.AddTransient<IEventoServices, EventoServices>();
 builder.Services.AddTransient<IEventoSeparacionsServices, EventoSeparacionsServices>();
 builder.Services.AddTransient<IUserServices, UserServices>();
 builder.Services.AddTransient<IMunicipioServices, MunicipioServices>();
+builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 builder.Services.AddDbContext<WujuDbContext>(options =>{
 
 
@@ -45,6 +67,9 @@ builder.Services.AddDbContext<WujuDbContext>(options =>{
 builder.Services.AddControllers().AddNewtonsoftJson(options => 
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+builder.Services.AddControllers().AddJsonOptions(option => {
+    option.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 
 var app = builder.Build();
@@ -75,8 +100,11 @@ if (app.Environment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>();
 }
 
+app.UseMiddleware<JwtMiddleware>();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

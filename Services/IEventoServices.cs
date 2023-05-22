@@ -13,5 +13,7 @@ namespace wb_backend.Services {
         Evento DeleteEvento(int id_evento);
         Evento ModifyEvento(int id_evento, EventoRequest data_evento);
         List<EventoDates> GetEventoDate(string? month, string? year);
+        PaginacionResponse<Evento> ListEventosWithPaginacion(int pagina, int totalRegistros);
+        Task<string> UploadImage(UploadImageRequest request);
     }
 }

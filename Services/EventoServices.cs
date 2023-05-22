@@ -1,4 +1,4 @@
-using System.Linq;
+using System.IO;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using wb_backend.Models;
@@ -58,6 +58,38 @@ namespace wb_backend.Services {
                                         .Include(evento => evento.Separacion)
                                         .ToList();
             return list_eventos;
+        }
+
+        public PaginacionResponse<Evento> ListEventosWithPaginacion(int pagina, int registrosPagina){
+            List<Evento> eventos = ListEventos();
+            string urlBase = "/api/eventos/pagination?";
+
+            int totalRegistros = eventos.Count(); 
+
+            eventos = eventos.Skip((pagina - 1) * registrosPagina)
+                                            .Take(registrosPagina)
+                                            .OrderByDescending(evento => evento.Separacion.Fecha)
+                                            .ToList();
+            int totalPaginas = (int)Math.Ceiling((double)totalRegistros / registrosPagina);
+
+            PaginacionResponse<Evento> response = new PaginacionResponse<Evento>{
+                RegistrosPorPagina = registrosPagina,
+                TotalRegistros = totalRegistros,
+                TotalPaginas = totalPaginas,
+                PaignaActual = pagina,
+                Data = eventos
+            }; 
+
+            if(pagina >= 1 && pagina <= totalPaginas){
+                if(pagina + 1 <= totalPaginas){
+                    response.PaginaSiguiente = urlBase + $"pagina={pagina + 1}&registros_pagina={registrosPagina}";                
+                }
+                if(pagina - 1 > 0){
+                    response.PaginaAnterior = urlBase + $"pagina={pagina - 1}&registros_pagina={registrosPagina}";                
+                }
+            }
+            
+            return response;
         }
 
         public List<Evento> ListEventosWithFilters(string? month, string? year){
@@ -147,6 +179,46 @@ namespace wb_backend.Services {
             }
 
             return eventosDates; 
+        }
+
+        public async Task<string> UploadImage(UploadImageRequest request){
+            // verificar que exista la carpeta
+            IFormFile file = request.File;
+            string projectDirectory = Directory.GetCurrentDirectory();
+            string imagePath = Path.Combine(projectDirectory, "Image");
+
+            if(Directory.Exists(imagePath)){
+                Console.WriteLine("El directorio existe");
+            }else{
+                Console.WriteLine("El directorio NO existe, pero en proceso de creacion...");
+                // Creando el diretorio si no existe
+                DirectoryInfo imageDir = Directory.CreateDirectory(imagePath);
+                Console.WriteLine($"Directorio {imageDir.Name} Cerado con Exito");
+                Console.WriteLine($"Path -> {imageDir.FullName}");
+            }
+
+            // Verificar que el archivo es valido
+            string pathSave = "";
+            if(file.Length > 0){
+                // guardar el archivo en la carpeta
+                Evento evento = GetEvento(request.Evento_id);
+                string nombreArchivo = $"evento_{evento.Id}_{evento.Ocasion}_{evento.Servicios}.jpg";
+                pathSave = Path.Combine(imagePath, nombreArchivo);
+                Console.WriteLine(pathSave);
+
+                using(var stream = new FileStream(pathSave, FileMode.Create)){
+                    await file.CopyToAsync(stream);
+                }
+
+                Console.WriteLine($"En el Servicio -> {request.Evento_id}");
+                // guardar el path en la base de datos
+                evento.ImageUrl = pathSave;
+                _dbContext.Entry(evento).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
+                Console.WriteLine("Archivo creado con exito");
+            }
+
+            return pathSave;
         }
 
     }

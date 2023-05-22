@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using wb_backend.Tools;
 
 namespace wb_backend.Models {
 
@@ -7,7 +8,7 @@ namespace wb_backend.Models {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string TypeUser { get; set; } = "cliente";
+        public string TypeUser { get; set; } = Role.Cliente.ToString();
         public ICollection<User> Users { get; set; } = new List<User>();
     }
 }

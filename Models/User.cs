@@ -15,7 +15,7 @@ namespace wb_backend.Models {
         [Required]
         public string Password { get; set; } = "";
         [Required]
-        public int Telefono { get; set; }
+        public string Telefono { get; set; } = null!;
         public string? Calle { get; set; }
         public string? Numero { get; set; }
         public string? Municipio { get; set; }

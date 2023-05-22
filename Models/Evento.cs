@@ -8,6 +8,7 @@ namespace wb_backend.Models {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string? NombrePaquete { get; set; }
+        public string? ImageUrl { get; set; }
         public string? Ocasion { get; set; }
         public string? Servicios { get; set; }
         public string? Mobiliario { get; set; }

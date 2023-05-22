@@ -120,5 +120,33 @@ namespace wb_backend.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet]
+        [Route("pagination")]
+        public IActionResult GetEventosListPagination(int pagina=1, int registros_pagina=10){
+        PaginacionResponse<Evento> response;
+            try{
+                response = _eventoService.ListEventosWithPaginacion(pagina, registros_pagina);
+                return Ok(response);
+            }catch(Exception error){
+                return BadRequest(error.Message);
+            }
+
+        }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadImageEveto([FromForm] UploadImageRequest request){
+            Response response = new Response();
+            try{
+                response.Message = "Imagen subida con exito";
+                response.Estado = 1;
+                response.data = await _eventoService.UploadImage(request);
+                return Ok(response);
+            }catch(Exception error){
+                response.Message = error.Message;
+                response.Estado = 0;
+                return BadRequest(response);
+            }
+        }
     }
 }
