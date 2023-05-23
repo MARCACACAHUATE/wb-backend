@@ -39,7 +39,6 @@ namespace wb_backend.Models {
 
         public string? EstadoCursoName { get; set; }
 
-        //public virtual ICollection<UserHasCursos> UserHasCursos { get; set; } = new List<UserHasCursos>();
         public virtual ICollection<User> Users { get; set; } = new List<User>();
         public virtual ICollection<CursoSeparacion> CursoSeparacion { get; set; } = new List<CursoSeparacion>();
 

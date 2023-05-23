@@ -60,40 +60,7 @@ namespace wbbackend.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "UserHasCursos",
-                columns: table => new
-                {
-                    CursosIdCursos = table.Column<int>(type: "integer", nullable: false),
-                    UsersId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserHasCursos", x => new { x.CursosIdCursos, x.UsersId });
-                    table.ForeignKey(
-                        name: "FK_UserHasCursos_Cursos_CursosIdCursos",
-                        column: x => x.CursosIdCursos,
-                        principalTable: "Cursos",
-                        principalColumn: "IdCursos",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserHasCursos_Users_UsersId",
-                        column: x => x.UsersId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CursoSeparacion_IdCursos",
-                table: "CursoSeparacion",
-                column: "IdCursos");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserHasCursos_UsersId",
-                table: "UserHasCursos",
-                column: "UsersId");
+        
         }
 
         /// <inheritdoc />
@@ -101,9 +68,6 @@ namespace wbbackend.Migrations
         {
             migrationBuilder.DropTable(
                 name: "CursoSeparacion");
-
-            migrationBuilder.DropTable(
-                name: "UserHasCursos");
 
             migrationBuilder.DropTable(
                 name: "Cursos");

@@ -25,20 +25,6 @@ namespace wbbackend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("UserHasCursos", b =>
-                {
-                    b.Property<int>("CursosIdCursos")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CursosIdCursos", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("UserHasCursos");
-                });
 
             modelBuilder.Entity("UserHasEventos", b =>
                 {
@@ -64,9 +50,6 @@ namespace wbbackend.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Cantidad_personas_contratadas")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("CursosIdCursos")
                         .HasColumnType("integer");
 
                     b.Property<int>("Edad")
@@ -95,11 +78,9 @@ namespace wbbackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CursosIdCursos");
-
                     b.HasIndex("IdCursos");
 
-                    b.ToTable("CursoSeparacions");
+                    b.ToTable("CursoSeparacion");
                 });
 
             modelBuilder.Entity("wb_backend.Models.Cursos", b =>
@@ -336,50 +317,6 @@ namespace wbbackend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("UserHasCursos", b =>
-                {
-                    b.HasOne("wb_backend.Models.Cursos", null)
-                        .WithMany()
-                        .HasForeignKey("CursosIdCursos")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("wb_backend.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("UserHasEventos", b =>
-                {
-                    b.HasOne("wb_backend.Models.Evento", null)
-                        .WithMany()
-                        .HasForeignKey("EventosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("wb_backend.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("wb_backend.Models.CursoSeparacion", b =>
-                {
-                    b.HasOne("wb_backend.Models.Cursos", null)
-                        .WithMany("CursoSeparacion")
-                        .HasForeignKey("CursosIdCursos");
-
-                    b.HasOne("wb_backend.Models.Cursos", "Cursos")
-                        .WithMany()
-                        .HasForeignKey("IdCursos")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cursos");
-                });
 
             modelBuilder.Entity("wb_backend.Models.Evento", b =>
                 {
@@ -414,10 +351,6 @@ namespace wbbackend.Migrations
                     b.Navigation("TipoUser");
                 });
 
-            modelBuilder.Entity("wb_backend.Models.Cursos", b =>
-                {
-                    b.Navigation("CursoSeparacion");
-                });
 
             modelBuilder.Entity("wb_backend.Models.Evento", b =>
                 {

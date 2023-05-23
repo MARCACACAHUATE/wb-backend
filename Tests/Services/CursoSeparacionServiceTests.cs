@@ -34,7 +34,7 @@ namespace Tests.Services
         public async Task CreateCursoSeparacionAsync_Should_Add_New_CursoSeparacion()
         {
             // Arrange
-            var newCursoSeparacion = new CursoSeparacion { First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= 73374283, Email = "luis@hotmail.com", Cantidad_personas_contratadas=1, IdCursos=1 };
+            var newCursoSeparacion = new CursoSeparacion { First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= "73374283", Email = "luis@hotmail.com", Cantidad_personas_contratadas=1, CursosIdCursos=1 };
 
             // Act
             var result = await _cursoSeparacionService.CreateCursoSeparacionAsync(newCursoSeparacion);
@@ -46,7 +46,7 @@ namespace Tests.Services
             Assert.AreEqual(newCursoSeparacion, result);
 
             // Verificar que el nuevo CursoSeparacion se agregó correctamente al DbContext
-            var addedCursoSeparacion = await _dbContext.CursoSeparacions.FindAsync(newCursoSeparacion.Id);
+            var addedCursoSeparacion = await _dbContext.CursoSeparacion.FindAsync(newCursoSeparacion.Id);
             Assert.AreEqual(newCursoSeparacion, addedCursoSeparacion);
         }
 
@@ -55,12 +55,12 @@ namespace Tests.Services
         public async Task GetCursoSeparacionByIdAsync_Should_Return_CursoSeparacion_With_Given_Id()
         {
             // Arrange
-            var cursoSeparacion = new CursoSeparacion { First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= 73374283, Email = "luis@hotmail.com", Cantidad_personas_contratadas=1, IdCursos=1 };
-            _dbContext.CursoSeparacions.Add(cursoSeparacion);
+            var cursoSeparacion = new CursoSeparacion { First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= "73374283", Email = "luis@hotmail.com", Cantidad_personas_contratadas=1, CursosIdCursos=1 };
+            _dbContext.CursoSeparacion.Add(cursoSeparacion);
             await _dbContext.SaveChangesAsync();
 
             // Imprimir los registros de CursoSeparacion en la base de datos
-            var cursosSeparacion = await _dbContext.CursoSeparacions.ToListAsync();
+            var cursosSeparacion = await _dbContext.CursoSeparacion.ToListAsync();
             Console.WriteLine("Registros de CursoSeparacion en la base de datos:");
             foreach (var cs in cursosSeparacion)
             {
@@ -87,13 +87,13 @@ namespace Tests.Services
             // Arrange
             var cursoSeparaciones = new List<CursoSeparacion>
             {
-                new CursoSeparacion { First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= 73374283, Email = "luis@hotmail.com", Cantidad_personas_contratadas=1, IdCursos=1 },
-                new CursoSeparacion { First_name = "Dana", Last_name = "Gonzalez", Edad=20, Telefono= 6216516, Email = "dana@hotmail.com", Cantidad_personas_contratadas=1, IdCursos=2 }
+                new CursoSeparacion { First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= "73374283", Email = "luis@hotmail.com", Cantidad_personas_contratadas=1, CursosIdCursos=1 },
+                new CursoSeparacion { First_name = "Dana", Last_name = "Gonzalez", Edad=20, Telefono= "6216516", Email = "dana@hotmail.com", Cantidad_personas_contratadas=1, CursosIdCursos=2 }
             };
 
             foreach (var cursoSeparacion in cursoSeparaciones)
             {
-                _dbContext.CursoSeparacions.Add(cursoSeparacion);
+                _dbContext.CursoSeparacion.Add(cursoSeparacion);
             }
             await _dbContext.SaveChangesAsync();
 
@@ -111,10 +111,10 @@ namespace Tests.Services
         {
             // Arrange
             var existingCursoSeparacion = new CursoSeparacion { First_name = "Luis", Last_name = "Lopez" };
-            _dbContext.CursoSeparacions.Add(existingCursoSeparacion);
+            _dbContext.CursoSeparacion.Add(existingCursoSeparacion);
             await _dbContext.SaveChangesAsync();
 
-            var updatedCursoSeparacion = new CursoSeparacion { First_name = "RamonActualizado", Last_name = "Lopez" , Edad=20, Telefono= 6216516, Email = "ramon@hotmail.com", Cantidad_personas_contratadas=1, IdCursos=2 };
+            var updatedCursoSeparacion = new CursoSeparacion { First_name = "RamonActualizado", Last_name = "Lopez" , Edad=20, Telefono= "6216516", Email = "ramon@hotmail.com", Cantidad_personas_contratadas=1, CursosIdCursos=2 };
 
             // Act
             var result = await _cursoSeparacionService.UpdateCursoSeparacionAsync(updatedCursoSeparacion.Id, updatedCursoSeparacion);
@@ -123,7 +123,7 @@ namespace Tests.Services
             Assert.AreEqual(updatedCursoSeparacion, result);
 
             // Verificar que el CursoSeparacion se actualizó correctamente en el DbContext
-            var updatedCursoSeparacionInDb = await _dbContext.CursoSeparacions.FindAsync(updatedCursoSeparacion.Id);
+            var updatedCursoSeparacionInDb = await _dbContext.CursoSeparacion.FindAsync(updatedCursoSeparacion.Id);
             Assert.AreEqual(updatedCursoSeparacion, updatedCursoSeparacionInDb);
         }
 
@@ -131,8 +131,8 @@ namespace Tests.Services
         public async Task DeleteCursoSeparacionAsync_Should_Delete_CursoSeparacion()
         {
             // Arrange
-            var existingCursoSeparacion = new CursoSeparacion { First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= 6216516, Email = "luis@hotmail.com", Cantidad_personas_contratadas=1, IdCursos=1 };
-            _dbContext.CursoSeparacions.Add(existingCursoSeparacion);
+            var existingCursoSeparacion = new CursoSeparacion { First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= "6216516", Email = "luis@hotmail.com", Cantidad_personas_contratadas=1, CursosIdCursos=1 };
+            _dbContext.CursoSeparacion.Add(existingCursoSeparacion);
             await _dbContext.SaveChangesAsync();
 
             // Act
@@ -142,7 +142,7 @@ namespace Tests.Services
             Assert.IsTrue(result);
 
             // Verificar que el CursoSeparacion se eliminó correctamente del DbContext
-            var deletedCursoSeparacion = await _dbContext.CursoSeparacions.FindAsync(existingCursoSeparacion.Id);
+            var deletedCursoSeparacion = await _dbContext.CursoSeparacion.FindAsync(existingCursoSeparacion.Id);
             Assert.IsNull(deletedCursoSeparacion);
         }
 
@@ -152,13 +152,13 @@ namespace Tests.Services
             // Arrange
             var cursoSeparaciones = new List<CursoSeparacion>
             {
-               new CursoSeparacion { First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= 73374283, Email = "luis@hotmail.com", Cantidad_personas_contratadas=1, IdCursos=1 },
-                new CursoSeparacion { First_name = "Dana", Last_name = "Gonzalez", Edad=20, Telefono= 6216516, Email = "dana@hotmail.com", Cantidad_personas_contratadas=1, IdCursos=2 }
+               new CursoSeparacion { First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= "73374283", Email = "luis@hotmail.com", Cantidad_personas_contratadas=1, CursosIdCursos=1 },
+                new CursoSeparacion { First_name = "Dana", Last_name = "Gonzalez", Edad=20, Telefono= "6216516", Email = "dana@hotmail.com", Cantidad_personas_contratadas=1, CursosIdCursos=2 }
             };
 
             foreach (var cursoSeparacion in cursoSeparaciones)
             {
-                _dbContext.CursoSeparacions.Add(cursoSeparacion);
+                _dbContext.CursoSeparacion.Add(cursoSeparacion);
             }
             await _dbContext.SaveChangesAsync();
 
@@ -178,12 +178,12 @@ namespace Tests.Services
             int cursoId = 1;
             var separaciones = new List<CursoSeparacion>
             {
-                new CursoSeparacion { Id = 1, IdCursos = 1, First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= 73374283, Email = "luis@hotmail.com", Cantidad_personas_contratadas=1 },
-                new CursoSeparacion { Id = 2, IdCursos = 1, First_name = "Jorge", Last_name = "Lopez", Edad=20, Telefono= 65465185, Email = "jorge@hotmail.com", Cantidad_personas_contratadas=1 },
-                new CursoSeparacion { Id = 3, IdCursos = 2, First_name = "Dana", Last_name = "Lopez", Edad=20, Telefono= 68411975, Email = "dana@hotmail.com", Cantidad_personas_contratadas=1, },
+                new CursoSeparacion { Id = 1, CursosIdCursos = 1, First_name = "Luis", Last_name = "Lopez", Edad=20, Telefono= "73374283", Email = "luis@hotmail.com", Cantidad_personas_contratadas=1 },
+                new CursoSeparacion { Id = 2, CursosIdCursos = 1, First_name = "Jorge", Last_name = "Lopez", Edad=20, Telefono= "65465185", Email = "jorge@hotmail.com", Cantidad_personas_contratadas=1 },
+                new CursoSeparacion { Id = 3, CursosIdCursos = 2, First_name = "Dana", Last_name = "Lopez", Edad=20, Telefono= "68411975", Email = "dana@hotmail.com", Cantidad_personas_contratadas=1, },
             };
 
-            _dbContext.CursoSeparacions.AddRange(separaciones);
+            _dbContext.CursoSeparacion.AddRange(separaciones);
             await _dbContext.SaveChangesAsync();
 
             // Act
@@ -192,7 +192,7 @@ namespace Tests.Services
             // Assert
             result.Should().NotBeNull();
             result.Should().HaveCount(2);
-            result.Should().OnlyContain(s => s.IdCursos == cursoId);
+            result.Should().OnlyContain(s => s.CursosIdCursos == cursoId);
         }
 
     }

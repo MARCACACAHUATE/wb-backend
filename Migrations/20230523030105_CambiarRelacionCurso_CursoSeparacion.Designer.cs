@@ -12,8 +12,8 @@ using wb_backend.Models;
 namespace wbbackend.Migrations
 {
     [DbContext(typeof(WujuDbContext))]
-    [Migration("20230522082241_TipoPagoCursoSeparacion")]
-    partial class TipoPagoCursoSeparacion
+    [Migration("20230523030105_CambiarRelacionCurso_CursoSeparacion")]
+    partial class CambiarRelacionCursoCursoSeparacion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,15 +73,13 @@ namespace wbbackend.Migrations
                         .HasMaxLength(45)
                         .HasColumnType("character varying(45)");
 
-                    b.Property<int>("Telefono")
-                        .HasColumnType("integer");
+                    b.Property<string>("Telefono")
+                        .HasColumnType("text");
 
                     b.Property<bool>("TipoPago")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdCursos");
 
                     b.ToTable("CursoSeparacion");
                 });
@@ -319,7 +317,6 @@ namespace wbbackend.Migrations
 
                     b.ToTable("Users");
                 });
-
 
             modelBuilder.Entity("UserHasEventos", b =>
                 {

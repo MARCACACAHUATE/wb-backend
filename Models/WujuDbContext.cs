@@ -10,7 +10,7 @@ namespace wb_backend.Models {
         public DbSet<TipoUser> TipoUsers { get; set; }
         public DbSet<Municipio> Municipios { get; set; }
         public DbSet<EventoSeparacion> EventoSeparacions { get; set; }
-        public DbSet<CursoSeparacion> CursoSeparacions { get; set; }
+        public DbSet<CursoSeparacion> CursoSeparacion { get; set; }
 
         private readonly IConfiguration _config;
 
@@ -30,15 +30,15 @@ namespace wb_backend.Models {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder){
-        modelBuilder.Entity<CursoSeparacion>()
-                    .HasOne(c => c.Cursos)
-                    .WithMany()
-                    .HasForeignKey(c => c.IdCursos);
+        // modelBuilder.Entity<CursoSeparacion>()
+        //             .HasOne(c => c.Cursos)
+        //             .WithMany()
+        //             .HasForeignKey(c => c.IdCursos);
 
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.Cursos)
-                .WithMany(e => e.Users)
-                .UsingEntity("UserHasCursos");
+            // modelBuilder.Entity<User>()
+            //     .HasMany(e => e.Cursos)
+            //     .WithMany(e => e.Users)
+            //     .UsingEntity("UserHasCursos");
 
             modelBuilder.Entity<User>()
                 .HasMany(e => e.Eventos)

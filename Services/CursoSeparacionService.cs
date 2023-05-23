@@ -17,28 +17,27 @@ namespace wb_backend.Services
 
         public async Task<CursoSeparacion> CreateCursoSeparacionAsync(CursoSeparacion cursoSeparacion)
         {
-            _context.CursoSeparacions.Add(cursoSeparacion);
+            _context.CursoSeparacion.Add(cursoSeparacion);
             await _context.SaveChangesAsync();
             return cursoSeparacion;
         }
 
         public async Task<CursoSeparacion> GetCursoSeparacionByIdAsync(int id)
         {
-           return await _context.CursoSeparacions.FindAsync(id);
+           return await _context.CursoSeparacion.FindAsync(id);
         }
 
 
 
         public async Task<IEnumerable<CursoSeparacion>> GetAllCursoSeparacionesAsync()
         {
-            return await _context.CursoSeparacions
-                .Include(c => c.Cursos)
-                .ToListAsync();
+            return await _context.CursoSeparacion
+            .ToListAsync();
         }
 
         public async Task<CursoSeparacion> UpdateCursoSeparacionAsync(int id, CursoSeparacion cursoSeparacion)
         {
-            var existingCursoSeparacion = await _context.CursoSeparacions.FindAsync(id);
+            var existingCursoSeparacion = await _context.CursoSeparacion.FindAsync(id);
 
             if (existingCursoSeparacion == null)
             {
@@ -51,7 +50,7 @@ namespace wb_backend.Services
             existingCursoSeparacion.Telefono = cursoSeparacion.Telefono;
             existingCursoSeparacion.Email = cursoSeparacion.Email;
             existingCursoSeparacion.Cantidad_personas_contratadas = cursoSeparacion.Cantidad_personas_contratadas;
-            existingCursoSeparacion.IdCursos = cursoSeparacion.IdCursos;
+            existingCursoSeparacion.CursosIdCursos = cursoSeparacion.CursosIdCursos;
 
             await _context.SaveChangesAsync();
 
@@ -60,14 +59,14 @@ namespace wb_backend.Services
 
         public async Task<bool> DeleteCursoSeparacionAsync(int id)
         {
-            var existingCursoSeparacion = await _context.CursoSeparacions.FindAsync(id);
+            var existingCursoSeparacion = await _context.CursoSeparacion.FindAsync(id);
 
             if (existingCursoSeparacion == null)
             {
                 return false;
             }
 
-            _context.CursoSeparacions.Remove(existingCursoSeparacion);
+            _context.CursoSeparacion.Remove(existingCursoSeparacion);
             await _context.SaveChangesAsync();
 
             return true;
@@ -75,13 +74,13 @@ namespace wb_backend.Services
 
         public async Task<List<CursoSeparacion>> GetCursoSeparacionesAsync()
         {
-        return await _context.CursoSeparacions.ToListAsync();
+        return await _context.CursoSeparacion.ToListAsync();
         }
 
         public async Task<List<CursoSeparacion>> GetSeparacionesByCursoIdAsync(int cursoId)
         {
-            return await _context.CursoSeparacions
-                .Where(cs => cs.IdCursos == cursoId)
+            return await _context.CursoSeparacion
+                .Where(cs => cs.CursosIdCursos == cursoId)
                 .ToListAsync();
         }
 
